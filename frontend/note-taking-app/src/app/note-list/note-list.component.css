@@ -1,0 +1,313 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap');
+
+:host {
+  display: block;
+  --gk-bg: #f8f9fa;
+  --gk-card-radius: 8px;
+  --gk-card-border: #e0e0e0;
+  --gk-label-bg: #f1f3f4;
+  --gk-text-primary: #202124;
+  --gk-text-secondary: #5f6368;
+  --gk-accent: #1a73e8;
+  --gk-pin-color: #444746;
+  --gk-empty-icon-color: #e0e0e0;
+  font-family: 'Lato', Roboto, sans-serif;
+}
+
+/* ── Page container ── */
+.gk-note-list-container {
+  padding: 24px 16px 24px 16px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+/* ───────────────────────────────────────
+   NOTE CREATOR
+─────────────────────────────────────── */
+.gk-creator-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 32px;
+}
+
+.gk-creator {
+  width: 100%;
+  max-width: 600px;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid var(--gk-card-border);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.05);
+  overflow: hidden;
+  transition: box-shadow 0.2s ease;
+}
+
+.gk-creator:focus-within {
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12), 0 8px 24px rgba(0,0,0,0.08);
+}
+
+.gk-creator-input {
+  width: 100%;
+  border: none;
+  outline: none;
+  padding: 14px 16px;
+  font-family: 'Lato', sans-serif;
+  font-size: 1rem;
+  color: var(--gk-text-primary);
+  background: transparent;
+}
+
+.gk-creator-input::placeholder {
+  color: var(--gk-text-secondary);
+  font-weight: 400;
+}
+
+.gk-creator-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 8px 8px 8px;
+  animation: fadeInUp 0.15s ease;
+}
+
+.gk-creator-toolbar {
+  display: flex;
+  gap: 2px;
+}
+
+.gk-tool-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: var(--gk-text-secondary);
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: background 0.15s ease;
+}
+
+.gk-tool-btn:hover {
+  background: #f1f3f4;
+  color: var(--gk-text-primary);
+}
+
+.gk-close-btn {
+  font-family: 'Lato', sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--gk-text-secondary);
+  border: none;
+  background: transparent;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background 0.15s ease;
+}
+
+.gk-close-btn:hover {
+  background: #f1f3f4;
+  color: var(--gk-text-primary);
+}
+
+/* ───────────────────────────────────────
+   SECTION LABELS
+─────────────────────────────────────── */
+.gk-section {
+  margin-bottom: 8px;
+}
+
+.gk-section-label {
+  font-family: 'Lato', sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gk-text-secondary);
+  margin: 0 0 12px 4px;
+}
+
+.gk-pin-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0 20px 0;
+  color: var(--gk-text-secondary);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.gk-pin-divider::before,
+.gk-pin-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #e0e0e0;
+}
+
+/* ───────────────────────────────────────
+   MASONRY GRID
+─────────────────────────────────────── */
+.gk-masonry-grid {
+  columns: 5 200px;
+  column-gap: 12px;
+}
+
+/* Each card sits inside the column flow */
+.gk-note-card-placeholder {
+  break-inside: avoid;
+  display: inline-block; /* required for column break-inside to work */
+  width: 100%;
+  border: 1px solid var(--gk-card-border);
+  border-radius: var(--gk-card-radius);
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  box-sizing: border-box;
+  position: relative;
+  cursor: pointer;
+  transition: box-shadow 0.18s ease, transform 0.18s ease;
+  animation: cardReveal 0.3s ease both;
+  animation-delay: calc(var(--card-index, 0) * 40ms);
+}
+
+.gk-note-card-placeholder:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12), 0 6px 20px rgba(0,0,0,0.08);
+  transform: translateY(-1px);
+}
+
+/* ── List view override ── */
+.gk-list-view {
+  columns: 1;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* ── Pin indicator ── */
+.gk-placeholder-pin {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  color: var(--gk-pin-color);
+  font-size: 1rem;
+  opacity: 0.7;
+}
+
+/* ── Card content ── */
+.gk-placeholder-title {
+  font-family: 'Lato', sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--gk-text-primary);
+  margin-bottom: 6px;
+  line-height: 1.4;
+  padding-right: 20px; /* clear pin icon */
+}
+
+.gk-placeholder-body {
+  font-family: 'Lato', sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 400;
+  color: var(--gk-text-secondary);
+  line-height: 1.55;
+  /* Keep cards compact — clamp long bodies */
+  display: -webkit-box;
+  -webkit-line-clamp: 10;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ── Label chips ── */
+.gk-placeholder-labels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.gk-label-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 10px;
+  background: var(--gk-label-bg);
+  border-radius: 11px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--gk-text-secondary);
+}
+
+/* ───────────────────────────────────────
+   EMPTY STATE
+─────────────────────────────────────── */
+.gk-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px;
+  gap: 16px;
+  animation: fadeInUp 0.4s ease;
+}
+
+.gk-empty-icon {
+  font-size: 6rem;
+  color: var(--gk-empty-icon-color);
+  line-height: 1;
+}
+
+.gk-empty-text {
+  font-family: 'Lato', sans-serif;
+  font-size: 1.375rem;
+  font-weight: 300;
+  color: var(--gk-text-secondary);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+/* ───────────────────────────────────────
+   ANIMATIONS
+─────────────────────────────────────── */
+@keyframes cardReveal {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ───────────────────────────────────────
+   RESPONSIVE BREAKPOINTS
+─────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .gk-masonry-grid {
+    columns: 4 180px;
+  }
+}
+
+@media (max-width: 768px) {
+  .gk-masonry-grid {
+    columns: 2 160px;
+  }
+  .gk-note-list-container {
+    padding: 16px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .gk-masonry-grid {
+    columns: 1;
+  }
+}

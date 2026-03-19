@@ -1,0 +1,95 @@
+<div class="gk-note-list-container">
+
+  <!-- Inline Note Creator -->
+  <div class="gk-creator-wrapper">
+    <div class="gk-creator">
+      <input
+        type="text"
+        class="gk-creator-input"
+        placeholder="Take a note..."
+        (focus)="onCreatorFocus()"
+        aria-label="Create a new note"
+      />
+      <div class="gk-creator-actions" *ngIf="creatorExpanded">
+        <div class="gk-creator-toolbar">
+          <button class="btn gk-tool-btn" aria-label="Add reminder">
+            <i class="bi bi-bell"></i>
+          </button>
+          <button class="btn gk-tool-btn" aria-label="Add collaborator">
+            <i class="bi bi-person-plus"></i>
+          </button>
+          <button class="btn gk-tool-btn" aria-label="Change color">
+            <i class="bi bi-palette"></i>
+          </button>
+          <button class="btn gk-tool-btn" aria-label="Add image">
+            <i class="bi bi-image"></i>
+          </button>
+          <button class="btn gk-tool-btn" aria-label="Archive">
+            <i class="bi bi-archive"></i>
+          </button>
+          <button class="btn gk-tool-btn" aria-label="More options">
+            <i class="bi bi-three-dots-vertical"></i>
+          </button>
+        </div>
+        <button class="btn gk-close-btn" (click)="onCreatorClose()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pinned Notes Section -->
+  <section *ngIf="pinnedNotes.length > 0" class="gk-section">
+    <h2 class="gk-section-label">Pinned</h2>
+    <div class="gk-masonry-grid" [class.gk-list-view]="isListView">
+      <!-- NoteCardComponent placeholder -->
+      <div
+        class="gk-note-card-placeholder"
+        *ngFor="let note of pinnedNotes; let i = index"
+        [style.--card-index]="i"
+        [style.background-color]="note.color || '#fff'"
+      >
+        <div class="gk-placeholder-pin">
+          <i class="bi bi-pin-angle-fill"></i>
+        </div>
+        <div class="gk-placeholder-title" *ngIf="note.title">{{ note.title }}</div>
+        <div class="gk-placeholder-body">{{ note.body }}</div>
+        <div class="gk-placeholder-labels" *ngIf="note.labels?.length">
+          <span class="gk-label-chip" *ngFor="let label of note.labels">{{ label }}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Divider between pinned and others -->
+  <div class="gk-pin-divider" *ngIf="pinnedNotes.length > 0 && otherNotes.length > 0">
+    <span>Other</span>
+  </div>
+
+  <!-- Other Notes Section -->
+  <section class="gk-section">
+    <h2 class="gk-section-label" *ngIf="pinnedNotes.length === 0 && otherNotes.length > 0" style="visibility: hidden">Notes</h2>
+    <div class="gk-masonry-grid" [class.gk-list-view]="isListView">
+      <!-- NoteCardComponent placeholder -->
+      <div
+        class="gk-note-card-placeholder"
+        *ngFor="let note of otherNotes; let i = index"
+        [style.--card-index]="i"
+        [style.background-color]="note.color || '#fff'"
+      >
+        <div class="gk-placeholder-title" *ngIf="note.title">{{ note.title }}</div>
+        <div class="gk-placeholder-body">{{ note.body }}</div>
+        <div class="gk-placeholder-labels" *ngIf="note.labels?.length">
+          <span class="gk-label-chip" *ngFor="let label of note.labels">{{ label }}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Empty State -->
+  <div class="gk-empty-state" *ngIf="pinnedNotes.length === 0 && otherNotes.length === 0">
+    <div class="gk-empty-icon">
+      <i class="bi bi-lightbulb"></i>
+    </div>
+    <p class="gk-empty-text">Notes you add appear here</p>
+  </div>
+
+</div>
