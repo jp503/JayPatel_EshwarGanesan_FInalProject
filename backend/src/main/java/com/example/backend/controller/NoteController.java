@@ -62,4 +62,20 @@ public class NoteController {
         noteService.deleteNote(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/{id}/tags/{tagId}")
+    public ResponseEntity<NoteDto> addTagToNote(@PathVariable Long id,
+                                                @PathVariable Long tagId) {
+        return noteService.addTagToNote(id, tagId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}/tags/{tagId}")
+    public ResponseEntity<NoteDto> removeTagFromNote(@PathVariable Long id,
+                                                     @PathVariable Long tagId) {
+        return noteService.removeTagFromNote(id, tagId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 }

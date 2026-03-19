@@ -92,6 +92,23 @@ public class NoteService {
         noteRepository.deleteById(id);
     }
 
+    public Optional<NoteDto> addTagToNote(Long noteId, Long tagId) {
+        return noteRepository.findByIdWithTags(noteId).map(note -> {
+            Tag tag = tagRepository.findById(tagId)
+                    .orElseThrow(() -> new RuntimeException("Tag not found: " + tagId));
+            note.getTags().add(tag);
+            return toDto(noteRepository.save(note));
+        });
+    }
+
+    public Optional<NoteDto> removeTagFromNote(Long noteId, Long tagId) {
+        return noteRepository.findByIdWithTags(noteId).map(note -> {
+            note.getTags().removeIf(t -> t.getId().equals(tagId));
+            return toDto(noteRepository.save(note));
+        });
+    }
+
+
 
     private NoteDto toDto(Note note) {
         List<TagSummaryDto> tags = note.getTags()
