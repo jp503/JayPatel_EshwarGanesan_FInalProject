@@ -1,0 +1,152 @@
+:host {
+  display: block;
+}
+
+/* ── Navbar shell ── */
+.gk-navbar {
+  border-bottom: 1px solid #e0e0e0;
+  padding: 0 8px;
+  height: 64px;
+  box-shadow: none !important;
+}
+
+.gk-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 100%;
+  padding: 0 8px;
+}
+
+/* ── Left section ── */
+.gk-left {
+  flex: 0 0 auto;
+  min-width: 220px; /* mirrors Keep's logo area width */
+}
+
+.gk-brand {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: 'Google Sans', 'Product Sans', Roboto, sans-serif;
+  font-size: 1.375rem;
+  font-weight: 400;
+  color: #202124;
+  text-decoration: none;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.gk-logo {
+  width: 28px;
+  height: 28px;
+}
+
+/* ── Center search ── */
+.gk-search-wrapper {
+  flex: 1 1 auto;
+  display: flex;
+  justify-content: center;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.gk-search-bar {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  background: #f1f3f4;
+  border-radius: 24px;
+  height: 46px;
+  padding: 0 8px 0 4px;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.gk-search-bar:focus-within {
+  background: #fff;
+  box-shadow: 0 1px 3px 1px rgba(60, 64, 67, 0.15),
+              0 2px 8px 4px rgba(60, 64, 67, 0.1);
+}
+
+.gk-search-icon-btn {
+  color: #444746;
+  font-size: 1.1rem;
+  padding: 6px 10px;
+  border: none;
+  background: transparent;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.gk-search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-family: Roboto, 'Google Sans', sans-serif;
+  font-size: 1rem;
+  color: #202124;
+  caret-color: #1a73e8;
+}
+
+.gk-search-input::placeholder {
+  color: #80868b;
+  font-weight: 400;
+}
+
+/* Remove default search input clear button in WebKit */
+.gk-search-input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
+
+/* ── Right section ── */
+.gk-right {
+  flex: 0 0 auto;
+  min-width: 220px;
+  justify-content: flex-end;
+}
+
+/* ── Shared icon button style ── */
+.gk-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: #444746;
+  font-size: 1.25rem;
+  padding: 0;
+  transition: background 0.15s ease;
+}
+
+.gk-icon-btn:hover {
+  background: #f1f3f4;
+}
+
+.gk-icon-btn:focus-visible {
+  outline: 2px solid #1a73e8;
+  outline-offset: 2px;
+}
+
+/* ── Avatar button ── */
+.gk-avatar-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: #444746;
+  font-size: 1.75rem;
+  padding: 0;
+  transition: opacity 0.15s ease;
+}
+
+.gk-avatar-btn:hover {
+  opacity: 0.85;
+}

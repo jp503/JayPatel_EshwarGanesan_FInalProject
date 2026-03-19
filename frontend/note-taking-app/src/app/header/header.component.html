@@ -1,0 +1,54 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white gk-navbar">
+  <div class="container-fluid gk-container">
+    <!-- Left: Menu toggle + Brand -->
+    <div class="d-flex align-items-center gk-left">
+      <button
+        class="btn gk-icon-btn me-1"
+        type="button"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#sidebar"
+        aria-controls="sidebar"
+        aria-label="Main menu"
+      >
+        <i class="bi bi-list"></i>
+      </button>
+      <a class="navbar-brand gk-brand" href="#">
+        <img src="assets/keep-icon.svg" alt="" class="gk-logo" />
+        <span>Note Taking App</span>
+      </a>
+    </div>
+
+    <!-- Center: Search -->
+    <div class="gk-search-wrapper">
+      <div class="gk-search-bar">
+        <button class="btn gk-search-icon-btn" aria-label="Search">
+          <i class="bi bi-search"></i>
+        </button>
+        <input
+          [(ngModel)]="query"
+          (ngModelChange)="searchChange.emit($event)"
+          type="search"
+          class="gk-search-input"
+          placeholder="Search"
+          aria-label="Search notes"
+        />
+      </div>
+    </div>
+
+    <!-- Right: Action icons + Avatar -->
+    <div class="d-flex align-items-center gk-right">
+      <button class="btn gk-icon-btn" aria-label="Refresh">
+        <i class="bi bi-arrow-clockwise"></i>
+      </button>
+      <button class="btn gk-icon-btn" aria-label="List view">
+        <i class="bi bi-grid"></i>
+      </button>
+      <button class="btn gk-icon-btn" aria-label="Settings">
+        <i class="bi bi-gear"></i>
+      </button>
+      <button class="btn gk-avatar-btn ms-1" aria-label="Profile">
+        <i class="bi bi-person-circle"></i>
+      </button>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,16 @@
+{
+    "compileOnSave": false,
+    "compilerOptions": {
+        "target": "ES2022",
+        "module": "ES2020",
+        "moduleResolution": "bundler",
+        "strict": true,
+        "forceConsistentCasingInFileNames": true,
+        "experimentalDecorators": true,
+        "skipLibCheck": true,
+        "isolatedModules": false,
+        "esModuleInterop": true,
+        "resolveJsonModule": true,
+        "lib": ["ES2022", "DOM"]
+    }
+}
