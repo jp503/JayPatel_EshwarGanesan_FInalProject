@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface NoteRepository extends JpaRepository<Note, Long> {
@@ -16,4 +17,13 @@ public interface NoteRepository extends JpaRepository<Note, Long> {
 
     @Query("SELECT DISTINCT n FROM Note n LEFT JOIN FETCH n.tags")
     List<Note> findAllWithTags();
+
+    @Query("SELECT DISTINCT n FROM Note n LEFT JOIN FETCH n.tags " +
+            "WHERE LOWER(n.title) LIKE LOWER(CONCAT('%', :q, '%')) " +
+            "OR LOWER(n.content) LIKE LOWER(CONCAT('%', :q, '%'))")
+    List<Note> searchByKeyword(@Param("q") String q);
+
+
+    @Query("SELECT DISTINCT n FROM Note n LEFT JOIN FETCH n.tags WHERE n.id = :id")
+    Optional<Note> findByIdWithTags(@Param("id") Long id);
 }
