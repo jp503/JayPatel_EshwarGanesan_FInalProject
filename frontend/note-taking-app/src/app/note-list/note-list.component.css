@@ -153,7 +153,7 @@
    MASONRY GRID
 ─────────────────────────────────────── */
 .gk-masonry-grid {
-  columns: 5 200px;
+  columns: 5 400px;
   column-gap: 12px;
 }
 

@@ -5,7 +5,7 @@ export const placeholderNotes: Note[] = [
     id: '1',
     title: 'First Note',
     body: 'This is the content of the first note.',
-    pinned: true,
+    pinned: false,
   },
   {
     id: '2',

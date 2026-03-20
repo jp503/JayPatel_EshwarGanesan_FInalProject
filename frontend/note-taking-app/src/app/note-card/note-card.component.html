@@ -1,0 +1,64 @@
+<div
+  class="gk-card"
+  [style.background-color]="note.color || '#fff'"
+  (mouseenter)="hovered = true"
+  (mouseleave)="hovered = false"
+  (click)="onCardClick()"
+  role="button"
+  [attr.aria-label]="note.title || 'Untitled note'"
+  tabindex="0"
+  (keydown.enter)="onCardClick()"
+>
+  <!-- Pin button -->
+  <button
+    class="gk-pin-btn"
+    [class.gk-pin-btn--active]="note.pinned"
+    [class.gk-pin-btn--visible]="hovered || note.pinned"
+    (click)="onPin($event)"
+    [attr.aria-label]="note.pinned ? 'Unpin note' : 'Pin note'"
+  >
+    <i
+      class="bi"
+      [class.bi-pin-angle]="!note.pinned"
+      [class.bi-pin-angle-fill]="note.pinned"
+    ></i>
+  </button>
+
+  <!-- Title -->
+  <div class="gk-card-title" *ngIf="note.title">{{ note.title }}</div>
+
+  <!-- Body -->
+  <div class="gk-card-body" *ngIf="note.body">{{ note.body }}</div>
+
+  <!-- Label chips -->
+  <div class="gk-card-labels" *ngIf="note.labels?.length">
+    <span class="gk-label-chip" *ngFor="let label of note.labels">{{
+      label
+    }}</span>
+  </div>
+
+  <!-- Hover toolbar -->
+  <div class="gk-card-toolbar" [class.gk-card-toolbar--visible]="hovered">
+    <button
+      class="btn gk-tool-btn"
+      (click)="onChangeColor($event)"
+      aria-label="Change color"
+    >
+      <i class="bi bi-palette"></i>
+    </button>
+    <button
+      class="btn gk-tool-btn"
+      (click)="onArchive($event)"
+      aria-label="Archive note"
+    >
+      <i class="bi bi-archive"></i>
+    </button>
+    <button
+      class="btn gk-tool-btn"
+      (click)="onMore($event)"
+      aria-label="More options"
+    >
+      <i class="bi bi-three-dots-vertical"></i>
+    </button>
+  </div>
+</div>

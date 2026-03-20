@@ -1,0 +1,128 @@
+<!-- Backdrop -->
+<div class="gk-backdrop" (click)="onBackdropClick()"></div>
+
+<!-- Editor panel -->
+<div
+  class="gk-editor"
+  [style.background-color]="editNote.color || '#ffffff'"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Edit note"
+  (click)="$event.stopPropagation()"
+>
+
+  <!-- Pin button -->
+  <button
+    class="gk-pin-btn"
+    [class.gk-pin-btn--active]="editNote.pinned"
+    (click)="togglePin()"
+    [attr.aria-label]="editNote.pinned ? 'Unpin note' : 'Pin note'"
+  >
+    <i class="bi" [class.bi-pin-angle]="!editNote.pinned" [class.bi-pin-angle-fill]="editNote.pinned"></i>
+  </button>
+
+  <!-- Title input -->
+  <input
+    #titleInput
+    class="gk-title-input"
+    type="text"
+    placeholder="Title"
+    [(ngModel)]="editNote.title"
+    aria-label="Note title"
+  />
+
+  <!-- Body textarea -->
+  <textarea
+    #bodyInput
+    class="gk-body-input"
+    placeholder="Take a note..."
+    [(ngModel)]="editNote.body"
+    (input)="autoResize($event)"
+    aria-label="Note body"
+    rows="1"
+  ></textarea>
+
+  <!-- Reminder chip (if set) -->
+  <div class="gk-chips-row" *ngIf="editNote.reminder || editNote.labels?.length">
+    <div class="gk-reminder-chip" *ngIf="editNote.reminder" (click)="onEditReminder()">
+      <i class="bi bi-bell"></i>
+      <span>{{ editNote.reminder | date:'MMM d, h:mm a' }}</span>
+      <button class="gk-chip-close" (click)="removeReminder($event)" aria-label="Remove reminder">
+        <i class="bi bi-x"></i>
+      </button>
+    </div>
+    <div
+      class="gk-label-chip"
+      *ngFor="let label of editNote.labels"
+      (click)="onLabelClick(label)"
+    >
+      {{ label }}
+      <button class="gk-chip-close" (click)="removeLabel($event, label)" aria-label="Remove label">
+        <i class="bi bi-x"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Color picker row (shown when palette is open) -->
+  <div class="gk-color-picker" *ngIf="colorPickerOpen" role="group" aria-label="Note color">
+    <button
+      class="gk-color-swatch"
+      *ngFor="let color of noteColors"
+      [style.background]="color.value"
+      [class.gk-color-swatch--active]="editNote.color === color.value"
+      (click)="setColor(color.value)"
+      [attr.aria-label]="color.label"
+      [attr.title]="color.label"
+    >
+      <i class="bi bi-check" *ngIf="editNote.color === color.value"></i>
+    </button>
+  </div>
+
+  <!-- Bottom toolbar -->
+  <div class="gk-editor-toolbar">
+    <div class="gk-toolbar-left">
+      <button class="btn gk-tool-btn" (click)="onAddReminder()" aria-label="Add reminder">
+        <i class="bi bi-bell"></i>
+      </button>
+      <button class="btn gk-tool-btn" (click)="onAddCollaborator()" aria-label="Add collaborator">
+        <i class="bi bi-person-plus"></i>
+      </button>
+      <button
+        class="btn gk-tool-btn"
+        [class.gk-tool-btn--active]="colorPickerOpen"
+        (click)="toggleColorPicker()"
+        aria-label="Change color"
+      >
+        <i class="bi bi-palette"></i>
+      </button>
+      <button class="btn gk-tool-btn" (click)="onAddImage()" aria-label="Add image">
+        <i class="bi bi-image"></i>
+      </button>
+      <button class="btn gk-tool-btn" (click)="onArchive()" aria-label="Archive">
+        <i class="bi bi-archive"></i>
+      </button>
+      <button class="btn gk-tool-btn" (click)="toggleMoreMenu()" aria-label="More options" [class.gk-tool-btn--active]="moreMenuOpen">
+        <i class="bi bi-three-dots-vertical"></i>
+      </button>
+
+      <!-- More menu -->
+      <div class="gk-more-menu" *ngIf="moreMenuOpen">
+        <button class="gk-more-item" (click)="onDelete()">
+          <i class="bi bi-trash"></i> Delete note
+        </button>
+        <button class="gk-more-item" (click)="onAddLabel()">
+          <i class="bi bi-tag"></i> Add label
+        </button>
+        <button class="gk-more-item" (click)="onMakeCopy()">
+          <i class="bi bi-files"></i> Make a copy
+        </button>
+      </div>
+    </div>
+
+    <div class="gk-toolbar-right">
+      <span class="gk-edited-hint" *ngIf="lastEdited">Edited {{ lastEdited }}</span>
+      <button class="btn gk-close-btn" (click)="onClose()">Close</button>
+    </div>
+  </div>
+
+</div>

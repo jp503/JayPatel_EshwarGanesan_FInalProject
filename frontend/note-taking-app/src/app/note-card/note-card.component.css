@@ -1,0 +1,204 @@
+:host {
+  display: block;
+}
+
+/* ── Card shell ── */
+.gk-card {
+  position: relative;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 12px 14px 4px 14px;
+  cursor: pointer;
+  transition: box-shadow 0.18s ease, transform 0.18s ease;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.gk-card:hover,
+.gk-card:focus-visible {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12), 0 6px 20px rgba(0,0,0,0.08);
+  transform: translateY(-1px);
+}
+
+.gk-card:focus-visible {
+  outline: 2px solid #1a73e8;
+  outline-offset: 2px;
+}
+
+/* ── Pin button ── */
+.gk-pin-btn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: #444746;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  opacity: 0;
+  transition: opacity 0.15s ease, background 0.15s ease;
+}
+
+.gk-pin-btn--visible {
+  opacity: 1;
+}
+
+.gk-pin-btn--active {
+  opacity: 1;
+  color: #202124;
+}
+
+.gk-pin-btn:hover {
+  background: rgba(0,0,0,0.07);
+}
+
+/* ── Title ── */
+.gk-card-title {
+  font-family: 'Lato', Roboto, sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #202124;
+  margin-bottom: 6px;
+  line-height: 1.4;
+  padding-right: 24px; /* clear pin button */
+  word-break: break-word;
+}
+
+/* ── Body ── */
+.gk-card-body {
+  font-family: 'Lato', Roboto, sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 400;
+  color: #5f6368;
+  line-height: 1.55;
+  display: -webkit-box;
+  -webkit-line-clamp: 10;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+  margin-bottom: 8px;
+}
+
+/* ── Checklist ── */
+.gk-checklist {
+  list-style: none;
+  margin: 0 0 8px 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.gk-checklist-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Lato', Roboto, sans-serif;
+  font-size: 0.8125rem;
+  color: #202124;
+}
+
+.gk-checklist-item i {
+  font-size: 0.9rem;
+  flex-shrink: 0;
+  color: #444746;
+}
+
+.gk-checklist-item--done span {
+  text-decoration: line-through;
+  color: #5f6368;
+}
+
+.gk-checklist-item--done i {
+  color: #1a73e8;
+}
+
+/* ── Reminder chip ── */
+.gk-reminder-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 22px;
+  padding: 0 10px;
+  background: #f1f3f4;
+  border-radius: 11px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #5f6368;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.gk-reminder-chip:hover {
+  background: #e0e0e0;
+}
+
+.gk-reminder-chip i {
+  font-size: 0.75rem;
+}
+
+/* ── Label chips ── */
+.gk-card-labels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.gk-label-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 10px;
+  background: rgba(0,0,0,0.06);
+  border-radius: 11px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #5f6368;
+  transition: background 0.15s ease;
+}
+
+.gk-label-chip:hover {
+  background: rgba(0,0,0,0.1);
+}
+
+/* ── Hover toolbar ── */
+.gk-card-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 0 6px 0;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.gk-card-toolbar--visible {
+  opacity: 1;
+}
+
+.gk-tool-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: #444746;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: background 0.15s ease;
+}
+
+.gk-tool-btn:hover {
+  background: rgba(0,0,0,0.07);
+  color: #202124;
+}
