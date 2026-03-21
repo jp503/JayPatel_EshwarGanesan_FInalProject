@@ -44,5 +44,9 @@ public class Note {
 
     private LocalDateTime pinnedAt;
 
+    @Column(nullable = false)
+    private boolean passwordProtected = false;
+
+    private String passwordHash;
 
 }

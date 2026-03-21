@@ -1,6 +1,7 @@
 package com.example.backend.controller;
 
 import com.example.backend.dto.NoteDto;
+import com.example.backend.dto.NotePasswordDto;
 import com.example.backend.service.NoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -84,6 +85,56 @@ public class NoteController {
         return noteService.togglePin(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PatchMapping("/{id}/password")
+    public ResponseEntity<?> setPassword(@PathVariable Long id,
+                                         @RequestBody NotePasswordDto dto) {
+        try {
+            return noteService.setPassword(id, dto.getPassword())
+                    .map(ResponseEntity::ok)
+                    .orElse(ResponseEntity.notFound().build());
+        }
+        catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", ex.getMessage()));
+        }
+    }
+
+    @DeleteMapping("/{id}/password")
+    public ResponseEntity<?> removePassword(@PathVariable Long id,
+                                            @RequestBody NotePasswordDto dto) {
+        try {
+            return noteService.removePassword(id, dto.getPassword())
+                    .map(ResponseEntity::ok)
+                    .orElse(ResponseEntity.notFound().build());
+        }
+        catch (RuntimeException ex) {
+            if (ex.getMessage().equals("Incorrect password")) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(Map.of("error", "Incorrect password"));
+            }
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", ex.getMessage()));
+        }
+    }
+
+    @PostMapping("/{id}/unlock")
+    public ResponseEntity<?> unlockNote(@PathVariable Long id,
+                                        @RequestBody NotePasswordDto dto) {
+        try {
+            return noteService.verifyPassword(id, dto.getPassword())
+                    .map(ResponseEntity::ok)
+                    .orElse(ResponseEntity.notFound().build());
+        }
+        catch (RuntimeException ex) {
+            if (ex.getMessage().equals("Incorrect password")) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(Map.of("error", "Incorrect password"));
+            }
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", ex.getMessage()));
+        }
     }
 
 }

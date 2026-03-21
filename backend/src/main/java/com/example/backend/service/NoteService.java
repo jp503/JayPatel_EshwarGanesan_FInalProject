@@ -7,6 +7,7 @@ import com.example.backend.model.Tag;
 import com.example.backend.repository.NoteRepository;
 import com.example.backend.repository.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -24,6 +25,8 @@ public class NoteService {
 
     @Autowired
     private TagRepository tagRepository;
+
+    @Autowired private BCryptPasswordEncoder passwordEncoder;
 
     public List<NoteDto> getAllNotes() {
         return noteRepository.findAllWithTagsSorted()
@@ -115,6 +118,40 @@ public class NoteService {
         });
     }
 
+    public Optional<NoteDto> setPassword(Long id, String rawPassword) {
+        return noteRepository.findByIdWithTags(id).map(note -> {
+            note.setPasswordProtected(true);
+            note.setPasswordHash(passwordEncoder.encode(rawPassword));
+            return toDto(noteRepository.save(note));
+        });
+    }
+
+    public Optional<NoteDto> removePassword(Long id, String rawPassword) {
+        return noteRepository.findByIdWithTags(id).map(note -> {
+            if (!note.isPasswordProtected()) {
+                throw new RuntimeException("Note is not password protected");
+            }
+            if (!passwordEncoder.matches(rawPassword, note.getPasswordHash())) {
+                throw new RuntimeException("Incorrect password");
+            }
+            note.setPasswordProtected(false);
+            note.setPasswordHash(null);
+            return toDto(noteRepository.save(note));
+        });
+    }
+
+    public Optional<NoteDto> verifyPassword(Long id, String rawPassword) {
+        return noteRepository.findByIdWithTags(id).map(note -> {
+            if (!note.isPasswordProtected()) {
+                return toDto(note);
+            }
+            if (!passwordEncoder.matches(rawPassword, note.getPasswordHash())) {
+                throw new RuntimeException("Incorrect password");
+            }
+            return toDto(note);
+        });
+    }
+
 
 
     private NoteDto toDto(Note note) {
@@ -131,7 +168,8 @@ public class NoteService {
                 note.getCreatedAt(),
                 note.getUpdatedAt(),
                 note.isPinned(),
-                note.getPinnedAt()
+                note.getPinnedAt(),
+                note.isPasswordProtected()
         );
     }
 }

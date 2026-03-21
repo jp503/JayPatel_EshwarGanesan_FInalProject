@@ -12,10 +12,11 @@ public class NoteDto {
     private LocalDateTime updatedAt;
     private boolean pinned;
     private LocalDateTime pinnedAt;
+    private boolean passwordProtected;
 
     public NoteDto(Long id, String title, String content,
                    List<TagSummaryDto> tags,
-                   LocalDateTime createdAt, LocalDateTime updatedAt, boolean pinned, LocalDateTime pinnedAt) {
+                   LocalDateTime createdAt, LocalDateTime updatedAt, boolean pinned, LocalDateTime pinnedAt, boolean passwordProtected) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -24,6 +25,7 @@ public class NoteDto {
         this.updatedAt = updatedAt;
         this.pinned = pinned;
         this.pinnedAt = pinnedAt;
+        this.passwordProtected = passwordProtected;
     }
 
     public Long getId() {
@@ -56,5 +58,9 @@ public class NoteDto {
 
     public LocalDateTime getPinnedAt() {
         return pinnedAt;
+    }
+
+    public boolean isPasswordProtected() {
+        return passwordProtected;
     }
 }
