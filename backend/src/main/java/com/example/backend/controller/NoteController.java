@@ -78,4 +78,12 @@ public class NoteController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    @PatchMapping("/{id}/pin")
+    public ResponseEntity<NoteDto> togglePin(@PathVariable Long id) {
+        return noteService.togglePin(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
 }

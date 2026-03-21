@@ -26,4 +26,9 @@ public interface NoteRepository extends JpaRepository<Note, Long> {
 
     @Query("SELECT DISTINCT n FROM Note n LEFT JOIN FETCH n.tags WHERE n.id = :id")
     Optional<Note> findByIdWithTags(@Param("id") Long id);
+
+    // ensure pinned note appear first
+    @Query("SELECT DISTINCT n FROM Note n LEFT JOIN FETCH n.tags " +
+            "ORDER BY n.pinned DESC, n.pinnedAt DESC, n.updatedAt DESC")
+    List<Note> findAllWithTagsSorted();
 }

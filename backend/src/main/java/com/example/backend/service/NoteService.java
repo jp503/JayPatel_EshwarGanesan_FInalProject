@@ -9,6 +9,7 @@ import com.example.backend.repository.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -25,10 +26,8 @@ public class NoteService {
     private TagRepository tagRepository;
 
     public List<NoteDto> getAllNotes() {
-        return noteRepository.findAllWithTags()
-                .stream()
-                .map(this:: toDto)
-                .collect(Collectors.toList());
+        return noteRepository.findAllWithTagsSorted()
+                .stream().map(this::toDto).collect(Collectors.toList());
     }
 
     public Optional<NoteDto> getNodeById(Long id) {
@@ -108,6 +107,14 @@ public class NoteService {
         });
     }
 
+    public Optional<NoteDto> togglePin(Long id) {
+        return noteRepository.findByIdWithTags(id).map(note -> {
+            note.setPinned(!note.isPinned());
+            note.setPinnedAt(note.isPinned() ? LocalDateTime.now() : null);
+            return toDto(noteRepository.save(note));
+        });
+    }
+
 
 
     private NoteDto toDto(Note note) {
@@ -122,7 +129,9 @@ public class NoteService {
                 note.getContent(),
                 tags,
                 note.getCreatedAt(),
-                note.getUpdatedAt()
+                note.getUpdatedAt(),
+                note.isPinned(),
+                note.getPinnedAt()
         );
     }
 }
