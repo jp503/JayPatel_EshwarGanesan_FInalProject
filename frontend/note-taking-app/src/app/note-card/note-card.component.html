@@ -31,8 +31,8 @@
   <div class="gk-card-body" *ngIf="note.content">{{ note.content }}</div>
 
   <!-- Label chips -->
-  <div class="gk-card-labels" *ngIf="note.labels?.length">
-    <span class="gk-label-chip" *ngFor="let label of note.labels">{{
+  <div class="gk-card-labels" *ngIf="note.tags?.length">
+    <span class="gk-label-chip" *ngFor="let label of note.tags">{{
       label
     }}</span>
   </div>

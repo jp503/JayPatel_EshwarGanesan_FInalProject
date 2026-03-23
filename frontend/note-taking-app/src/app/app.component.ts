@@ -6,6 +6,7 @@ import { NoteListComponent } from './note-list/note-list.component';
 import { Note } from './note';
 import { CommonModule } from '@angular/common';
 import { NoteServiceService } from './note-service.service';
+import { TagServiceService } from './tag-service.service';
 
 @Component({
   selector: 'app-root',
@@ -18,10 +19,15 @@ export class AppComponent {
   title = 'note-taking-app';
   notes: Note[] = [];
   filteredNotes: Note[] = [];
+  tags: string[] = [];
 
-  constructor(private noteService: NoteServiceService) {}
+  constructor(private noteService: NoteServiceService, private tagService: TagServiceService) {}
 
   ngOnInit(): void {
+    this.tagService.getAllTags().subscribe({
+      next: (t) => this.tags = t,
+      error: (err) => console.error('Failed to load tags', err)
+    });
     this.noteService.getAllNotes().subscribe({
       next: (n) => {
         this.notes = n;

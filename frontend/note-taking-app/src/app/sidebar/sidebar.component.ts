@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -9,17 +9,13 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css']
 })
-export class SidebarComponent implements OnInit {
-  labels: string[] = [];
-   editingLabels = false;
+export class SidebarComponent{
+  @Input() labels: string[] = [];
+  editingLabels = false;
   newLabelText = '';
   editingIndex: number | null = null;
   editingText = '';
 
-  ngOnInit() {
-    // Seed with some default labels — swap this out for a LabelService call later
-    this.labels = ['Personal', 'Work'];
-  }
 
   toggleEditing() {
     this.editingLabels = !this.editingLabels;

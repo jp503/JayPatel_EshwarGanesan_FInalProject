@@ -22,7 +22,7 @@ export class NoteEditorComponent implements OnInit {
 
   ngOnInit() {
     // Work on a deep copy so changes don't mutate the list until saved
-    this.editNote = { ...this.note, labels: [...(this.note.labels ?? [])] };
+    this.editNote = { ...this.note, tags: [...(this.note.tags ?? [])] };
   }
 
   ngAfterViewInit() {
@@ -45,7 +45,7 @@ export class NoteEditorComponent implements OnInit {
 
   removeLabel(e: Event, label: string) {
     e.stopPropagation();
-    this.editNote.labels = this.editNote.labels?.filter(l => l !== label);
+    this.editNote.tags = this.editNote.tags?.filter(l => l !== label);
   }
 
   onClose() {
