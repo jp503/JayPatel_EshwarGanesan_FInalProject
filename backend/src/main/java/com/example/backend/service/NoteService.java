@@ -143,12 +143,12 @@ public class NoteService {
     public Optional<NoteDto> verifyPassword(Long id, String rawPassword) {
         return noteRepository.findByIdWithTags(id).map(note -> {
             if (!note.isPasswordProtected()) {
-                return toDto(note);
+                return toDtoUnmasked(note);
             }
             if (!passwordEncoder.matches(rawPassword, note.getPasswordHash())) {
                 throw new RuntimeException("Incorrect password");
             }
-            return toDto(note);
+            return toDtoUnmasked(note);
         });
     }
 
@@ -157,6 +157,28 @@ public class NoteService {
     private NoteDto toDto(Note note) {
         List<TagSummaryDto> tags = note.getTags()
                 .stream()
+                .map(t -> new TagSummaryDto(t.getId(), t.getName()))
+                .collect(Collectors.toList());
+
+        // If password protected, hide content
+        String safeContent = note.isPasswordProtected() ? null : note.getContent();
+
+        return new NoteDto(
+                note.getId(),
+                note.getTitle(),
+                safeContent,
+                tags,
+                note.getCreatedAt(),
+                note.getUpdatedAt(),
+                note.isPinned(),
+                note.getPinnedAt(),
+                note.isPasswordProtected()
+        );
+    }
+
+    // Used only by verifyPassword()
+    private NoteDto toDtoUnmasked(Note note) {
+        List<TagSummaryDto> tags = note.getTags().stream()
                 .map(t -> new TagSummaryDto(t.getId(), t.getName()))
                 .collect(Collectors.toList());
 
