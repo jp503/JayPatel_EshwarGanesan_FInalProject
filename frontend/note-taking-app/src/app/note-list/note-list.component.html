@@ -1,15 +1,23 @@
+<div
+  class="gk-creator-backdrop"
+  *ngIf="creatorExpanded"
+  (click)="onBackdropClick()"
+></div>
 <div class="gk-note-list-container">
-  <div
-    class="gk-creator-backdrop"
-    *ngIf="creatorExpanded"
-    (click)="onBackdropClick()"
-  ></div>
   <!-- Inline Note Creator -->
   <div class="gk-creator-wrapper">
     <div class="gk-creator" (click)="$event.stopPropagation()">
       <input
         type="text"
-        class="gk-creator-input"
+        class="gk-creator-input title"
+        placeholder="Title..."
+        (focus)="onCreatorFocus()"
+        [(ngModel)]="newNoteTitle"
+        aria-label="Title for the new note"
+      />
+      <input
+        type="text"
+        class="gk-creator-input body"
         placeholder="Take a note..."
         (focus)="onCreatorFocus()"
         [(ngModel)]="newNoteBody"
