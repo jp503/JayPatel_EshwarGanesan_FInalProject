@@ -1,12 +1,18 @@
 <div class="gk-note-list-container">
+  <div
+    class="gk-creator-backdrop"
+    *ngIf="creatorExpanded"
+    (click)="onBackdropClick()"
+  ></div>
   <!-- Inline Note Creator -->
   <div class="gk-creator-wrapper">
-    <div class="gk-creator">
+    <div class="gk-creator" (click)="$event.stopPropagation()">
       <input
         type="text"
         class="gk-creator-input"
         placeholder="Take a note..."
         (focus)="onCreatorFocus()"
+        [(ngModel)]="newNoteBody"
         aria-label="Create a new note"
       />
       <div class="gk-creator-actions" *ngIf="creatorExpanded">
@@ -43,9 +49,11 @@
     <div class="gk-masonry-grid" [class.gk-list-view]="isListView">
       <!-- NoteCardComponent placeholder -->
       <app-note-card
-        *ngFor="let note of pinnedNotes; let i = index"
+        *ngFor="let note of pinnedNotes; let i = index; trackBy: trackByNoteId"
         [note]="note"
+        [@cardReveal]
         [style.--card-index]="i"
+        [class.gk-card-ghost]="selectedNote?.id === note.id"
         (pinToggle)="onPinToggle($event)"
         (cardClick)="onCardClick($event)"
       ></app-note-card>
@@ -72,9 +80,11 @@
     <div class="gk-masonry-grid" [class.gk-list-view]="isListView">
       <!-- NoteCardComponent placeholder -->
       <app-note-card
-        *ngFor="let note of otherNotes; let i = index"
+        *ngFor="let note of otherNotes; let i = index; trackBy: trackByNoteId"
         [note]="note"
+        [@cardReveal]
         [style.--card-index]="i"
+        [class.gk-card-ghost]="selectedNote?.id === note.id"
         (pinToggle)="onPinToggle($event)"
         (cardClick)="onCardClick($event)"
       ></app-note-card>
@@ -92,3 +102,9 @@
     <p class="gk-empty-text">Notes you add appear here</p>
   </div>
 </div>
+<app-note-editor
+  *ngIf="selectedNote"
+  [note]="selectedNote"
+  (noteSaved)="onNoteSaved($event)"
+  (noteClosed)="onEditorClose()"
+/>

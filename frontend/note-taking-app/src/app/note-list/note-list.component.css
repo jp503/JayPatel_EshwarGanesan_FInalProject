@@ -24,6 +24,14 @@
 /* ───────────────────────────────────────
    NOTE CREATOR
 ─────────────────────────────────────── */
+
+.gk-creator-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  background: transparent;
+}
+
 .gk-creator-wrapper {
   display: flex;
   justify-content: center;
@@ -155,6 +163,7 @@
 .gk-masonry-grid {
   columns: 5 400px;
   column-gap: 12px;
+  contain: layout style;
 }
 
 /* Each card sits inside the column flow */
@@ -279,6 +288,12 @@
   color: var(--gk-text-secondary);
   margin: 0;
   letter-spacing: -0.01em;
+}
+
+.gk-card-ghost {
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.15s ease;
 }
 
 /* ───────────────────────────────────────

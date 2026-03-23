@@ -1,5 +1,9 @@
 :host {
   display: block;
+  transition: opacity 0.15s ease, visibility 0.15s ease;
+  break-inside: avoid;
+  margin-bottom: 12px;
+  contain: layout style;
 }
 
 /* ── Card shell ── */
