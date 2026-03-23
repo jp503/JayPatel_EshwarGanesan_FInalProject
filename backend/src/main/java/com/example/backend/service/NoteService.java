@@ -7,8 +7,10 @@ import com.example.backend.model.Tag;
 import com.example.backend.repository.NoteRepository;
 import com.example.backend.repository.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -24,11 +26,11 @@ public class NoteService {
     @Autowired
     private TagRepository tagRepository;
 
+    @Autowired private BCryptPasswordEncoder passwordEncoder;
+
     public List<NoteDto> getAllNotes() {
-        return noteRepository.findAllWithTags()
-                .stream()
-                .map(this:: toDto)
-                .collect(Collectors.toList());
+        return noteRepository.findAllWithTagsSorted()
+                .stream().map(this::toDto).collect(Collectors.toList());
     }
 
     public Optional<NoteDto> getNodeById(Long id) {
@@ -108,6 +110,48 @@ public class NoteService {
         });
     }
 
+    public Optional<NoteDto> togglePin(Long id) {
+        return noteRepository.findByIdWithTags(id).map(note -> {
+            note.setPinned(!note.isPinned());
+            note.setPinnedAt(note.isPinned() ? LocalDateTime.now() : null);
+            return toDto(noteRepository.save(note));
+        });
+    }
+
+    public Optional<NoteDto> setPassword(Long id, String rawPassword) {
+        return noteRepository.findByIdWithTags(id).map(note -> {
+            note.setPasswordProtected(true);
+            note.setPasswordHash(passwordEncoder.encode(rawPassword));
+            return toDto(noteRepository.save(note));
+        });
+    }
+
+    public Optional<NoteDto> removePassword(Long id, String rawPassword) {
+        return noteRepository.findByIdWithTags(id).map(note -> {
+            if (!note.isPasswordProtected()) {
+                throw new RuntimeException("Note is not password protected");
+            }
+            if (!passwordEncoder.matches(rawPassword, note.getPasswordHash())) {
+                throw new RuntimeException("Incorrect password");
+            }
+            note.setPasswordProtected(false);
+            note.setPasswordHash(null);
+            return toDto(noteRepository.save(note));
+        });
+    }
+
+    public Optional<NoteDto> verifyPassword(Long id, String rawPassword) {
+        return noteRepository.findByIdWithTags(id).map(note -> {
+            if (!note.isPasswordProtected()) {
+                return toDto(note);
+            }
+            if (!passwordEncoder.matches(rawPassword, note.getPasswordHash())) {
+                throw new RuntimeException("Incorrect password");
+            }
+            return toDto(note);
+        });
+    }
+
 
 
     private NoteDto toDto(Note note) {
@@ -122,7 +166,10 @@ public class NoteService {
                 note.getContent(),
                 tags,
                 note.getCreatedAt(),
-                note.getUpdatedAt()
+                note.getUpdatedAt(),
+                note.isPinned(),
+                note.getPinnedAt(),
+                note.isPasswordProtected()
         );
     }
 }

@@ -39,5 +39,14 @@ public class Note {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    @Column(nullable = false)
+    private boolean pinned = false;
+
+    private LocalDateTime pinnedAt;
+
+    @Column(nullable = false)
+    private boolean passwordProtected = false;
+
+    private String passwordHash;
 
 }
