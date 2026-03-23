@@ -32,22 +32,86 @@
     <div class="gk-section-divider"></div>
     <div class="gk-section-header">
       <span>Labels</span>
-      <button class="btn gk-edit-btn" aria-label="Edit labels">Edit</button>
+      <button
+        class="btn gk-edit-btn"
+        aria-label="Edit labels"
+        (click)="toggleEditing()"
+      >
+        {{ editingLabels ? "Done" : "Edit" }}
+      </button>
     </div>
 
     <nav aria-label="Labels">
       <ul class="gk-nav-list">
-        <li>
-          <a href="#" class="gk-nav-item">
+        <li *ngFor="let label of labels; let i = index">
+
+          <!-- Edit mode row -->
+          <div *ngIf="editingLabels" class="gk-label-edit-row">
+            <button
+              class="gk-label-icon-btn gk-delete-btn"
+              (click)="deleteLabel(i)"
+              aria-label="Delete label"
+            >
+              <i class="bi bi-dash-circle"></i>
+            </button>
+
+            <input
+              *ngIf="editingIndex === i"
+              class="gk-label-input"
+              type="text"
+              [(ngModel)]="editingText"
+              (blur)="saveEdit(i)"
+              (keydown)="onEditKeydown($event, i)"
+              aria-label="Edit label name"
+              autofocus
+            />
+            <span
+              *ngIf="editingIndex !== i"
+              class="gk-label-edit-text"
+              (click)="startEditing(i)"
+            >{{ label }}</span>
+
+            <button
+              class="gk-label-icon-btn"
+              (click)="startEditing(i)"
+              aria-label="Edit label"
+            >
+              <i class="bi bi-pencil"></i>
+            </button>
+          </div>
+
+          <!-- Normal nav item -->
+          <a
+            *ngIf="!editingLabels"
+            href="#"
+            class="gk-nav-item"
+          >
             <i class="bi bi-tag gk-nav-icon"></i>
-            <span>Personal</span>
+            <span>{{ label }}</span>
           </a>
         </li>
-        <li>
-          <a href="#" class="gk-nav-item">
-            <i class="bi bi-tag gk-nav-icon"></i>
-            <span>Work</span>
-          </a>
+
+        <!-- New label input row (edit mode only) -->
+        <li *ngIf="editingLabels">
+          <div class="gk-label-edit-row gk-new-label-row">
+            <i class="bi bi-plus gk-new-label-icon"></i>
+            <input
+              class="gk-label-input"
+              type="text"
+              [(ngModel)]="newLabelText"
+              placeholder="Create new label"
+              (keydown)="onNewLabelKeydown($event)"
+              aria-label="New label name"
+            />
+            <button
+              class="gk-label-icon-btn"
+              (click)="addLabel()"
+              [disabled]="!newLabelText.trim()"
+              aria-label="Add label"
+            >
+              <i class="bi bi-check"></i>
+            </button>
+          </div>
         </li>
       </ul>
     </nav>
