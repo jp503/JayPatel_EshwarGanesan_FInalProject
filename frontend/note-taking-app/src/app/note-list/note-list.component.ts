@@ -49,7 +49,7 @@ saveNewNote() {
     const note: Note = {
       id: crypto.randomUUID(),
       title: this.newNoteTitle,
-      body: this.newNoteBody,
+      content: this.newNoteBody,
     };
     this.notes = [note, ...this.notes];
     this.newNoteTitle = '';

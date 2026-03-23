@@ -4,19 +4,19 @@ export const placeholderNotes: Note[] = [
   {
     id: '1',
     title: 'First Note',
-    body: 'This is the content of the first note.',
+    content: 'This is the content of the first note.',
     pinned: false,
   },
   {
     id: '2',
     title: 'Second Note',
-    body: 'This is the content of the second note.',
+    content: 'This is the content of the second note.',
     pinned: false,
   },
   {
     id: '3',
     title: 'Third Note',
-    body: 'This is the content of the third note.',
+    content: 'This is the content of the third note.',
     pinned: false,
   }
 ];  

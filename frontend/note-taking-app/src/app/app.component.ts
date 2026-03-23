@@ -1,11 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './header/header.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { NoteListComponent } from './note-list/note-list.component';
-import { placeholderNotes } from './placeholder-notes';
 import { Note } from './note';
 import { CommonModule } from '@angular/common';
+import { NoteServiceService } from './note-service.service';
 
 @Component({
   selector: 'app-root',
@@ -16,8 +16,20 @@ import { CommonModule } from '@angular/common';
 })
 export class AppComponent {
   title = 'note-taking-app';
-  notes: Note[] = placeholderNotes;
-  filteredNotes: Note[] = this.notes;
+  notes: Note[] = [];
+  filteredNotes: Note[] = [];
+
+  constructor(private noteService: NoteServiceService) {}
+
+  ngOnInit(): void {
+    this.noteService.getAllNotes().subscribe({
+      next: (n) => {
+        this.notes = n;
+        this.filteredNotes = n;
+      },
+      error: (err) => console.error('Failed to load notes', err)
+    });
+  }
 
   onSearch(text: string) {
     const q = (text || '').toLowerCase().trim();
