@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges, OnChanges } from '@angular/core';
 import { Note } from '../note';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -24,20 +24,46 @@ import { trigger, style, animate, transition } from '@angular/animations';
   ]
 })
 export class NoteListComponent {
-  @Input() notes: Note[] = [];
+  notes: Note[] = [];
+  filteredNotes: Note[] = [];
   @Input() isListView: boolean = false;
+  @Input() searchText: string = '';
 
   constructor(private noteService: NoteServiceService) {}
 
+  
   creatorExpanded = false;
   selectedNote: Note | null = null;
 
+  ngOnInit(): void {
+    this.noteService.getAllNotes().subscribe({
+      next: (n) => {
+        this.notes = n;
+        this.filteredNotes = n;
+      },
+      error: (err) => console.error('Failed to load notes', err)
+    });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    const q = (this.searchText || '').toLowerCase().trim();
+    if (!q) {
+      this.filteredNotes = this.notes;
+      return;
+    }
+    this.filteredNotes = this.notes.filter(n => JSON.stringify(n).toLowerCase().includes(q));
+  }
+
   onCardClick(note: Note) { this.selectedNote = {...note}; }
+
   onEditorClose() { 
     setTimeout(() => {
     this.selectedNote = null;
-  }, 150);}
+  }, 150);
+}
+
   onPinToggle(note: Note)   { note.pinned = !note.pinned; }
+
   onNoteSaved(note: Note)    {
   const idx = this.notes.findIndex(n => n.id === note.id);
   if (idx > -1) this.notes[idx] = note;
@@ -70,7 +96,9 @@ saveNewNote() {
   get otherNotes()  { return this.notes.filter(n => !n.pinned); }
 
   onCreatorFocus()  { this.creatorExpanded = true; }
+
   onBackdropClick() { this.onCreatorClose(); }
+
   onCreatorClose()  { 
     this.creatorExpanded = false;
     this.saveNewNote();
@@ -78,5 +106,6 @@ saveNewNote() {
 
   trackByNoteId(index: number, note: Note): string {
   return note.id;
-}
+  }
+
 }

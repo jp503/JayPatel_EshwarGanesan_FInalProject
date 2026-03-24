@@ -11,5 +11,10 @@ import { FormsModule } from '@angular/forms';
 })
 export class HeaderComponent {
   @Output() searchChange = new EventEmitter<string>();
+
+  onSearchChange() {
+    this.searchChange.emit(this.query);
+  }
+  
   query = '';
 }

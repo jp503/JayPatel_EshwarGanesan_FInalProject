@@ -26,7 +26,7 @@
         </button>
         <input
           [(ngModel)]="query"
-          (ngModelChange)="searchChange.emit($event)"
+          (ngModelChange)="onSearchChange()"
           type="search"
           class="gk-search-input"
           placeholder="Search"
