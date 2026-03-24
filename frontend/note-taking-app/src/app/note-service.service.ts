@@ -52,4 +52,14 @@ export class NoteServiceService {
       error: (err) => console.error('Failed to load notes', err)
     });
   }
+
+  createNote(note: Note): Observable<Note> {
+    return this.http.post<Note>(`${this.baseUrl}/api/notes`, note).pipe(
+      map(createdNote => {
+        const current = this.notes();
+        this.notes.set([createdNote, ...current]);
+        return createdNote;
+      })
+    );
+  }
 }

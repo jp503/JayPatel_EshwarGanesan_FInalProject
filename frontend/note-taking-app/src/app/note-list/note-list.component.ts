@@ -4,7 +4,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NoteCardComponent } from '../note-card/note-card.component';
 import { NoteEditorComponent } from '../note-editor/note-editor.component';
+import { NoteServiceService } from '../note-service.service';
 import { trigger, style, animate, transition } from '@angular/animations';
+
 
 @Component({
   selector: 'app-note-list',
@@ -24,6 +26,8 @@ import { trigger, style, animate, transition } from '@angular/animations';
 export class NoteListComponent {
   @Input() notes: Note[] = [];
   @Input() isListView: boolean = false;
+
+  constructor(private noteService: NoteServiceService) {}
 
   creatorExpanded = false;
   selectedNote: Note | null = null;
@@ -46,14 +50,19 @@ newNoteBody = '';
 saveNewNote() {
   // Only save if there's actual content
   if (this.newNoteTitle || this.newNoteBody) {
-    const note: Note = {
-      id: crypto.randomUUID(),
+    const note: Partial<Note> = {
       title: this.newNoteTitle,
       content: this.newNoteBody,
+      tags: [],
     };
-    this.notes = [note, ...this.notes];
-    this.newNoteTitle = '';
-    this.newNoteBody = '';
+    this.noteService.createNote(note as Note).subscribe({
+      next: (createdNote: Note) => {
+        this.notes = [createdNote, ...this.notes];
+        this.newNoteTitle = '';
+        this.newNoteBody = '';
+      },
+      error: (err) => console.error('Failed to create note', err)
+    });
   }
 }
 

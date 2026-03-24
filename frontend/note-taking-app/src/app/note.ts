@@ -6,4 +6,5 @@ export interface Note {
   color?: string;
   tags?: string[];
   pinned?: boolean;
+  passwordProtected?: boolean;
 }
