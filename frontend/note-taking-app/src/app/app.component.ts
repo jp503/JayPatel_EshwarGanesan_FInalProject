@@ -5,7 +5,6 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import { NoteListComponent } from './note-list/note-list.component';
 import { Note } from './note';
 import { CommonModule } from '@angular/common';
-import { TagServiceService } from './tag-service.service';
 
 @Component({
   selector: 'app-root',
@@ -18,15 +17,6 @@ export class AppComponent {
   title = 'note-taking-app';
   tags: string[] = [];
   searchQuery: string = '';
-
-  constructor(private tagService: TagServiceService) {}
-
-  ngOnInit(): void {
-    this.tagService.getAllTags().subscribe({
-      next: (t) => this.tags = t,
-      error: (err) => console.error('Failed to load tags', err)
-    });
-  }
 
   onSearchChange(query: string) {
     this.searchQuery = query;

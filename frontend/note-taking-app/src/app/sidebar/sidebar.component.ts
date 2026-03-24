@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TagServiceService } from '../tag-service.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -16,6 +17,14 @@ export class SidebarComponent{
   editingIndex: number | null = null;
   editingText = '';
 
+  constructor(private tagService: TagServiceService) {}
+
+  ngOnInit(): void {
+    this.tagService.getAllTags().subscribe({
+      next: (t) => this.labels = t,
+      error: (err) => console.error('Failed to load tags', err)
+    });
+  }
 
   toggleEditing() {
     this.editingLabels = !this.editingLabels;
