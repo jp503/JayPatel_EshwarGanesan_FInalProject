@@ -62,4 +62,41 @@ export class NoteServiceService {
       })
     );
   }
+
+  updateNote(note: Note): Observable<Note> {
+    return this.http.put<Note>(`${this.baseUrl}/api/notes/${note.id}`, note).pipe(
+      map(updatedNote => {
+        const current = this.notes();
+        const idx = current.findIndex(n => n.id === updatedNote.id);
+        if (idx > -1) {
+          current[idx] = updatedNote;
+          this.notes.set([...current]);
+        }
+        return updatedNote;
+      })
+    );
+  }
+
+  deleteNote(note: Note): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/api/notes/${note.id}`).pipe(
+      map(() => {
+        const current = this.notes();
+        this.notes.set(current.filter(n => n.id !== note.id));
+      })
+    );
+  }
+
+  pinNote(note: Note): Observable<Note> {
+    return this.http.patch<Note>(`${this.baseUrl}/api/notes/${note.id}/pin`, {}).pipe(
+      map(updatedNote => {
+        const current = this.notes();
+        const idx = current.findIndex(n => n.id === updatedNote.id);
+        if (idx > -1) {
+          current[idx] = updatedNote;
+          this.notes.set([...current]);
+        }
+        return updatedNote;
+      })
+    );
+  }
 }

@@ -15,7 +15,6 @@ import { CommonModule } from '@angular/common';
 })
 export class AppComponent {
   title = 'note-taking-app';
-  tags: string[] = [];
   searchQuery: string = '';
 
   onSearchChange(query: string) {

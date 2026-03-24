@@ -36,13 +36,7 @@ export class NoteListComponent {
   selectedNote: Note | null = null;
 
   ngOnInit(): void {
-    this.noteService.getAllNotes().subscribe({
-      next: (n) => {
-        this.notes = n;
-        this.filteredNotes = n;
-      },
-      error: (err) => console.error('Failed to load notes', err)
-    });
+    this.loadNotes();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -62,11 +56,34 @@ export class NoteListComponent {
   }, 150);
 }
 
-  onPinToggle(note: Note)   { note.pinned = !note.pinned; }
+  onPinToggle(note: Note)   { 
+    note.pinned = !note.pinned;
+    this.noteService.pinNote(note).subscribe({
+      next: () => console.log('Note pin toggled'),
+      error: (err) => console.error('Failed to toggle pin', err)
+    });
+  }
 
   onNoteSaved(note: Note)    {
   const idx = this.notes.findIndex(n => n.id === note.id);
   if (idx > -1) this.notes[idx] = note;
+
+  this.noteService.updateNote(note).subscribe({
+    next: () => console.log('Note updated'),
+    error: (err) => console.error('Failed to update note', err)
+  });
+  this.selectedNote = null;
+}
+  onNoteDeleted(note: Note)   {
+  this.noteService.deleteNote(note).subscribe({
+    next: () => {
+      this.notes = this.notes.filter(n => n.id !== note.id);
+      this.filteredNotes = this.filteredNotes.filter(n => n.id !== note.id);
+      this.selectedNote = null;
+      console.log('Note deleted');
+    },
+    error: (err) => console.error('Failed to delete note', err)
+  });
   this.selectedNote = null;
 }
 
@@ -86,10 +103,22 @@ saveNewNote() {
         this.notes = [createdNote, ...this.notes];
         this.newNoteTitle = '';
         this.newNoteBody = '';
+        console.log('Note saved');
       },
       error: (err) => console.error('Failed to create note', err)
     });
   }
+}
+
+loadNotes() {
+  this.noteService.getAllNotes().subscribe({
+      next: (n) => {
+        this.notes = n;
+        this.filteredNotes = n;
+        console.log('Notes loaded');
+      },
+      error: (err) => console.error('Failed to load notes', err)
+    });
 }
 
   get pinnedNotes() { return this.notes.filter(n => n.pinned); }

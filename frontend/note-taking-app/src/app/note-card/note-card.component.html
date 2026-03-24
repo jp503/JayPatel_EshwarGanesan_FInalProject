@@ -48,6 +48,13 @@
     </button>
     <button
       class="btn gk-tool-btn"
+      (click)="onDelete($event)"
+      aria-label="Delete note"
+    >
+      <i class="bi bi-trash"></i>
+    </button>
+    <button
+      class="btn gk-tool-btn"
       (click)="onMore($event)"
       aria-label="More options"
     >

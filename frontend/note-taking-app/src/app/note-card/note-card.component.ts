@@ -15,6 +15,7 @@ export class NoteCardComponent {
   @Output() pinToggle = new EventEmitter<Note>();
   @Output() archive   = new EventEmitter<Note>();
   @Output() colorChange = new EventEmitter<Note>();
+  @Output() deleteNote = new EventEmitter<Note>();
 
   hovered = false;
 
@@ -24,4 +25,5 @@ export class NoteCardComponent {
   onChangeColor(e: Event){ e.stopPropagation(); this.colorChange.emit(this.note); }
   onAddCollaborator(e: Event){ e.stopPropagation(); }
   onMore(e: Event)       { e.stopPropagation(); }
+  onDelete(e: Event)     { e.stopPropagation(); this.deleteNote.emit(this.note); }
 }
