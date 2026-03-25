@@ -11,13 +11,22 @@ import { NoteServiceService } from '../note-service.service';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
-  constructor(private NoteServiceService: NoteServiceService) {}
-  @Output() toggleView = new EventEmitter<void>();
+  constructor(private noteService: NoteServiceService) {}
+  listView: boolean = false;
+  @Output() toggleView = new EventEmitter<boolean>();
   @Output() searchChange = new EventEmitter<string>();
 
   onSearchChange() {
     this.searchChange.emit(this.query);
   }
+
+  onRefresh() {
+    this.noteService.loadNotes();
+  }
   
+  onToggleView() {
+    this.listView = !this.listView;
+    this.toggleView.emit(this.listView);
+  }
   query = '';
 }

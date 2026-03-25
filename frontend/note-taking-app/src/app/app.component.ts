@@ -16,9 +16,13 @@ import { CommonModule } from '@angular/common';
 export class AppComponent {
   title = 'note-taking-app';
   searchQuery: string = '';
+  isListView: boolean = false;
 
   onSearchChange(query: string) {
     this.searchQuery = query;
   }
 
+  onToggleView(isList: boolean) {
+    this.isListView = isList;
+  }
 }

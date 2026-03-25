@@ -24,26 +24,7 @@
         aria-label="Create a new note"
       />
       <div class="gk-creator-actions" *ngIf="creatorExpanded">
-        <div class="gk-creator-toolbar">
-          <button class="btn gk-tool-btn" aria-label="Add reminder">
-            <i class="bi bi-bell"></i>
-          </button>
-          <button class="btn gk-tool-btn" aria-label="Add collaborator">
-            <i class="bi bi-person-plus"></i>
-          </button>
-          <button class="btn gk-tool-btn" aria-label="Change color">
-            <i class="bi bi-palette"></i>
-          </button>
-          <button class="btn gk-tool-btn" aria-label="Add image">
-            <i class="bi bi-image"></i>
-          </button>
-          <button class="btn gk-tool-btn" aria-label="Archive">
-            <i class="bi bi-archive"></i>
-          </button>
-          <button class="btn gk-tool-btn" aria-label="More options">
-            <i class="bi bi-three-dots-vertical"></i>
-          </button>
-        </div>
+        <div class="gk-creator-toolbar"></div>
         <button class="btn gk-close-btn" (click)="onCreatorClose()">
           Close
         </button>

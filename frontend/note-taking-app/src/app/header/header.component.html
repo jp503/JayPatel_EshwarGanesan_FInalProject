@@ -37,17 +37,28 @@
 
     <!-- Right: Action icons + Avatar -->
     <div class="d-flex align-items-center gk-right">
-      <button class="btn gk-icon-btn" aria-label="Refresh">
+      <button
+        class="btn gk-icon-btn"
+        aria-label="Refresh"
+        (click)="onRefresh()"
+      >
         <i class="bi bi-arrow-clockwise"></i>
       </button>
-      <button class="btn gk-icon-btn" aria-label="List view">
+      <button
+        *ngIf="!listView"
+        class="btn gk-icon-btn"
+        aria-label="List view"
+        (click)="onToggleView()"
+      >
+        <i class="bi bi-view-stacked"></i>
+      </button>
+      <button
+        *ngIf="listView"
+        class="btn gk-icon-btn"
+        aria-label="Grid view"
+        (click)="onToggleView()"
+      >
         <i class="bi bi-grid"></i>
-      </button>
-      <button class="btn gk-icon-btn" aria-label="Settings">
-        <i class="bi bi-gear"></i>
-      </button>
-      <button class="btn gk-avatar-btn ms-1" aria-label="Profile">
-        <i class="bi bi-person-circle"></i>
       </button>
     </div>
   </div>
