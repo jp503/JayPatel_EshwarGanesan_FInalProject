@@ -46,6 +46,8 @@
         (pinToggle)="onPinToggle($event)"
         (cardClick)="onCardClick($event)"
         (deleteNote)="onNoteDeleted($event)"
+        (lockNoteEvent)="onLockNote($event)"
+        (unlockNoteEvent)="onUnlockNote($event)"
       ></app-note-card>
     </div>
   </section>
@@ -78,6 +80,8 @@
         (pinToggle)="onPinToggle($event)"
         (cardClick)="onCardClick($event)"
         (deleteNote)="onNoteDeleted($event)"
+        (lockNoteEvent)="onLockNote($event)"
+        (unlockNoteEvent)="onUnlockNote($event)"
       ></app-note-card>
     </div>
   </section>
@@ -95,13 +99,19 @@
 </div>
 
 <!-- Password Prompt Modal -->
-<div class="gk-modal-backdrop" *ngIf="passwordPromptNote" (click)="onPasswordCancel()">
+<div
+  class="gk-modal-backdrop"
+  *ngIf="passwordPromptNote"
+  (click)="onPasswordCancel()"
+>
   <div class="gk-password-modal" (click)="$event.stopPropagation()">
-
     <div class="gk-password-modal-header">
       <i class="bi bi-lock"></i>
       <h3>Protected Note</h3>
-      <p>Enter the password to view <strong>{{ passwordPromptNote.title || 'this note' }}</strong></p>
+      <p>
+        Enter the password to view
+        <strong>{{ passwordPromptNote.title || "this note" }}</strong>
+      </p>
     </div>
 
     <div class="gk-password-modal-body">
@@ -119,16 +129,127 @@
     </div>
 
     <div class="gk-password-modal-actions">
-      <button class="gk-btn-cancel" (click)="onPasswordCancel()" [disabled]="passwordLoading">
+      <button
+        class="gk-btn-cancel"
+        (click)="onPasswordCancel()"
+        [disabled]="passwordLoading"
+      >
         Cancel
       </button>
-      <button class="gk-btn-unlock" (click)="onPasswordSubmit()" [disabled]="passwordLoading || !passwordInput">
+      <button
+        class="gk-btn-unlock"
+        (click)="onPasswordSubmit()"
+        [disabled]="passwordLoading || !passwordInput"
+      >
         <i class="bi bi-unlock" *ngIf="!passwordLoading"></i>
         <i class="bi bi-arrow-repeat gk-spin" *ngIf="passwordLoading"></i>
-        {{ passwordLoading ? 'Unlocking...' : 'Unlock' }}
+        {{ passwordLoading ? "Unlocking..." : "Unlock" }}
       </button>
     </div>
+  </div>
+</div>
 
+<!-- Lock Note Modal -->
+<div
+  class="gk-modal-backdrop"
+  *ngIf="lockPromptNote"
+  (click)="onPasswordCancel()"
+>
+  <div class="gk-password-modal" (click)="$event.stopPropagation()">
+    <div class="gk-password-modal-header">
+      <i class="bi bi-lock"></i>
+      <h3>Lock Note</h3>
+      <p>
+        Enter the password to lock
+        <strong>{{ lockPromptNote.title || "this note" }}</strong>
+      </p>
+    </div>
+
+    <div class="gk-password-modal-body">
+      <input
+        class="gk-password-input"
+        type="password"
+        placeholder="Password"
+        [(ngModel)]="passwordInput"
+        (keydown.enter)="onPasswordSubmit()"
+        [disabled]="passwordLoading"
+        autofocus
+        aria-label="Note password"
+      />
+      <p class="gk-password-error" *ngIf="passwordError">{{ passwordError }}</p>
+    </div>
+
+    <div class="gk-password-modal-actions">
+      <button
+        class="gk-btn-cancel"
+        (click)="onPasswordCancel()"
+        [disabled]="passwordLoading"
+      >
+        Cancel
+      </button>
+      <button
+        class="gk-btn-unlock"
+        (click)="onPasswordSubmit()"
+        [disabled]="passwordLoading || !passwordInput"
+      >
+        <i class="bi bi-unlock" *ngIf="!passwordLoading"></i>
+        <i class="bi bi-arrow-repeat gk-spin" *ngIf="passwordLoading"></i>
+        {{ passwordLoading ? "Locking..." : "Locked" }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<!--Unlock modal-->
+<div
+  class="gk-modal-backdrop"
+  *ngIf="unlockPromptNote"
+  (click)="onPasswordCancel()"
+>
+  <div class="gk-password-modal" (click)="$event.stopPropagation()">
+    <div class="gk-password-modal-header">
+      <i class="bi bi-lock"></i>
+      <h3>Protected Note</h3>
+      <p>
+        Enter the password to unlock
+        <strong>{{ unlockPromptNote.title || "this note" }}</strong>
+      </p>
+    </div>
+
+    <div class="gk-password-modal-body">
+      <input
+        class="gk-password-input"
+        type="password"
+        placeholder="Password"
+        [(ngModel)]="passwordInput"
+        (keydown.enter)="onPasswordSubmit()"
+        [disabled]="passwordLoading"
+        autofocus
+        aria-label="Note password"
+      />
+      <p class="gk-password-error" *ngIf="passwordError">
+        {{ passwordError }}
+      </p>
+    </div>
+
+    <div class="gk-password-modal-actions">
+      <button
+        class="gk-btn-cancel"
+        (click)="onPasswordCancel()"
+        [disabled]="passwordLoading"
+      >
+        Cancel
+      </button>
+      <button
+        class="gk-btn-unlock"
+        (click)="onPasswordSubmit()"
+        [disabled]="passwordLoading || !passwordInput"
+      >
+        <i class="bi bi-unlock" *ngIf="!passwordLoading"></i>
+        <i class="bi bi-arrow-repeat gk-spin" *ngIf="passwordLoading"></i>
+        {{ passwordLoading ? "Unlocking..." : "Unlock" }}
+      </button>
+    </div>
   </div>
 </div>
 

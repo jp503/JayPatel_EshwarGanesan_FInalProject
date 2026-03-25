@@ -29,7 +29,9 @@
 
   <!-- Body -->
   <div class="gk-card-body" *ngIf="note.content">{{ note.content }}</div>
-
+  <div class="gk-card-body" *ngIf="note.passwordProtected">
+    <i class="bi bi-shield-slash"></i>
+  </div>
   <!-- Label chips -->
   <div class="gk-card-labels" *ngIf="note.tags?.length">
     <span class="gk-label-chip" *ngFor="let label of note.tags">{{
@@ -55,6 +57,22 @@
       aria-label="Delete note"
     >
       <i class="bi bi-trash"></i>
+    </button>
+    <button
+      class="btn gk-tool-btn"
+      *ngIf="note.passwordProtected"
+      (click)="onUnlock($event)"
+      aria-label="Unlock note"
+    >
+      <i class="bi bi-unlock"></i>
+    </button>
+    <button
+      class="btn gk-tool-btn"
+      *ngIf="!note.passwordProtected"
+      (click)="onLock($event)"
+      aria-label="Lock note"
+    >
+      <i class="bi bi-lock"></i>
     </button>
 
     <!-- Label button + picker -->
@@ -97,7 +115,10 @@
             </span>
             <span class="gk-label-name">{{ label.name }}</span>
           </li>
-          <li *ngIf="filteredLabels().length === 0" class="gk-label-picker-empty">
+          <li
+            *ngIf="filteredLabels().length === 0"
+            class="gk-label-picker-empty"
+          >
             No matching labels
           </li>
         </ul>

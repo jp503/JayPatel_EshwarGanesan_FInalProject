@@ -21,6 +21,8 @@ export class NoteCardComponent {
   @Output() colorChange = new EventEmitter<Note>();
   @Output() deleteNote = new EventEmitter<Note>();
   @Output() labelChange = new EventEmitter<Note>();
+  @Output() lockNoteEvent = new EventEmitter<Note>();
+  @Output() unlockNoteEvent = new EventEmitter<Note>();
 
   constructor(private tagService: TagServiceService, private noteService: NoteServiceService, private elementRef: ElementRef) {}
 
@@ -80,6 +82,14 @@ toggleLabel(e: Event, label: Tag) {
   this.labelPickerOpen = !this.labelPickerOpen;
   this.searchTextSignal.set('');
 }
+  onUnlock(e: Event) {
+    e.stopPropagation();
+    this.unlockNoteEvent.emit(this.note);
+  }
+  onLock(e: Event) {
+    e.stopPropagation();
+    this.lockNoteEvent.emit(this.note);
+  }
 
 @HostListener('document:click', ['$event'])
   onDocumentClick(event: Event) {

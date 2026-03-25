@@ -159,12 +159,48 @@ private applyOptimisticTagUpdate(noteId: number, tagName: string, add: boolean):
   return current; // return snapshot for rollback
 }
 
-unlockNote(noteId: number, password: string): Observable<Note> {
+decryptNote(noteId: number, password: string): Observable<Note> {
   return this.http.post<any>(
     `${this.baseUrl}/api/notes/${noteId}/unlock`,
     { password }
   ).pipe(
     map(note => this.normalizeNote(note))
+  );
+}
+
+lockNote(noteId: number, password: string): Observable<Note> {
+  return this.http.patch<any>(
+    `${this.baseUrl}/api/notes/${noteId}/password`,
+    { password }
+  ).pipe(
+    map(updatedNote => {
+      this.normalizeNote(updatedNote);
+      const current = this.notes();
+      const idx = current.findIndex(n => n.id === updatedNote.id);
+      if (idx > -1) {
+        current[idx] = this.normalizeNote(updatedNote);
+        this.notes.set([...current]);
+      }
+      return this.normalizeNote(updatedNote);
+  })
+  );
+}
+
+unlockNote(noteId: number, password: string): Observable<Note> {
+  return this.http.delete<any>(
+    `${this.baseUrl}/api/notes/${noteId}/password`,
+    { body: { password } }
+  ).pipe(
+    map(updatedNote => {
+      this.normalizeNote(updatedNote);
+      const current = this.notes();
+      const idx = current.findIndex(n => n.id === updatedNote.id);
+      if (idx > -1) {
+        current[idx] = this.normalizeNote(updatedNote);
+        this.notes.set([...current]);
+      }
+      return this.normalizeNote(updatedNote);
+  })
   );
 }
 }

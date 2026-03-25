@@ -35,6 +35,8 @@ export class NoteListComponent {
   selectedNote: Note | null = null;
 
   passwordPromptNote: Note | null = null;
+  unlockPromptNote: Note | null = null;
+  lockPromptNote: Note | null = null;
   passwordInput = '';
   passwordError = '';
   passwordLoading = false;
@@ -70,26 +72,55 @@ filteredNotes = computed(() => {
   }
 
   onPasswordSubmit() {
-    if (!this.passwordPromptNote) return;
     this.passwordLoading = true;
     this.passwordError = '';
+    if (this.passwordPromptNote) {
 
-    this.noteService.unlockNote(this.passwordPromptNote.id, this.passwordInput).subscribe({
-      next: (unlockedNote) => {
-        this.passwordLoading = false;
-        this.selectedNote = { ...unlockedNote };
-        this.passwordPromptNote = null;
-        this.passwordInput = '';
-      },
+      this.noteService.decryptNote(this.passwordPromptNote.id, this.passwordInput).subscribe({
+        next: (unlockedNote) => {
+          this.passwordLoading = false;
+          this.selectedNote = { ...unlockedNote };
+          this.passwordPromptNote = null;
+          this.passwordInput = '';
+        },
       error: () => {
         this.passwordLoading = false;
         this.passwordError = 'Incorrect password. Please try again.';
       }
     });
+    }
+    else if (this.lockPromptNote) {
+      this.noteService.lockNote(this.lockPromptNote.id, this.passwordInput).subscribe({
+        next: () => {
+          this.passwordLoading = false;
+          this.lockPromptNote = null;
+          this.passwordInput = '';
+        },
+      error: () => {
+        this.passwordLoading = false;
+        this.passwordError = 'Failed to lock note. Please try again.';
+      }
+    });
+    }
+    else if (this.unlockPromptNote) {
+      this.noteService.unlockNote(this.unlockPromptNote.id, this.passwordInput).subscribe({
+        next: () => {
+          this.passwordLoading = false;
+          this.unlockPromptNote = null;
+          this.passwordInput = '';
+        },
+        error: () => {
+          this.passwordLoading = false;
+          this.passwordError = 'Failed to unlock note. Please try again.';
+        }
+      });
+    }
   }
 
   onPasswordCancel() {
     this.passwordPromptNote = null;
+    this.lockPromptNote = null;
+    this.unlockPromptNote = null;
     this.passwordInput = '';
     this.passwordError = '';
   }
@@ -165,6 +196,18 @@ saveNewNote() {
   onCreatorClose()  { 
     this.creatorExpanded = false;
     this.saveNewNote();
+  }
+
+  onLockNote(note: Note) {
+    this.lockPromptNote = note;
+    this.passwordInput = '';
+    this.passwordError = '';
+  }
+
+  onUnlockNote(note: Note) {
+    this.unlockPromptNote = note;
+    this.passwordInput = '';
+    this.passwordError = '';
   }
 
   trackByNoteId(index: number, note: Note): number {
