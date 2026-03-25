@@ -58,8 +58,13 @@ filteredNotes = computed(() => {
   );
 });
 
-  get pinnedNotes() { return this.notes().filter(n => n.pinned); }
-  get otherNotes()  { return this.notes().filter(n => !n.pinned); }
+pinnedNotes = computed(() =>
+  this.filteredNotes().filter(n => n.pinned)
+);
+
+otherNotes = computed(() =>
+  this.filteredNotes().filter(n => !n.pinned)
+);
 
   onCardClick(note: Note) { 
     if (note.passwordProtected) {

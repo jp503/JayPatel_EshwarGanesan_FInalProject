@@ -33,12 +33,12 @@
   </div>
 
   <!-- Pinned Notes Section -->
-  <section *ngIf="pinnedNotes.length > 0" class="gk-section">
+  <section *ngIf="pinnedNotes().length > 0" class="gk-section">
     <h2 class="gk-section-label">Pinned</h2>
     <div class="gk-masonry-grid" [class.gk-list-view]="isListView">
       <!-- NoteCardComponent placeholder -->
       <app-note-card
-        *ngFor="let note of pinnedNotes; let i = index; trackBy: trackByNoteId"
+        *ngFor="let note of pinnedNotes(); let i = index; trackBy: trackByNoteId"
         [note]="note"
         [@cardReveal]
         [style.--card-index]="i"
@@ -55,7 +55,7 @@
   <!-- Divider between pinned and others -->
   <div
     class="gk-pin-divider"
-    *ngIf="pinnedNotes.length > 0 && otherNotes.length > 0"
+    *ngIf="pinnedNotes().length > 0 && otherNotes().length > 0"
   >
     <span>Other</span>
   </div>
@@ -64,7 +64,7 @@
   <section class="gk-section">
     <h2
       class="gk-section-label"
-      *ngIf="pinnedNotes.length === 0 && otherNotes.length > 0"
+      *ngIf="pinnedNotes().length === 0 && otherNotes().length > 0"
       style="visibility: hidden"
     >
       Notes
@@ -72,7 +72,7 @@
     <div class="gk-masonry-grid" [class.gk-list-view]="isListView">
       <!-- NoteCardComponent placeholder -->
       <app-note-card
-        *ngFor="let note of otherNotes; let i = index; trackBy: trackByNoteId"
+        *ngFor="let note of otherNotes(); let i = index; trackBy: trackByNoteId"
         [note]="note"
         [@cardReveal]
         [style.--card-index]="i"
@@ -89,7 +89,7 @@
   <!-- Empty State -->
   <div
     class="gk-empty-state"
-    *ngIf="pinnedNotes.length === 0 && otherNotes.length === 0"
+    *ngIf="pinnedNotes().length === 0 && otherNotes().length === 0"
   >
     <div class="gk-empty-icon">
       <i class="bi bi-lightbulb"></i>
