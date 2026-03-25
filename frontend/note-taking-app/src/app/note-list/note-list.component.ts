@@ -6,6 +6,7 @@ import { NoteCardComponent } from '../note-card/note-card.component';
 import { NoteEditorComponent } from '../note-editor/note-editor.component';
 import { NoteServiceService } from '../note-service.service';
 import { trigger, style, animate, transition } from '@angular/animations';
+import { TagServiceService } from '../tag-service.service';
 
 
 @Component({
@@ -24,7 +25,7 @@ import { trigger, style, animate, transition } from '@angular/animations';
   ]
 })
 export class NoteListComponent {
-  constructor(private noteService: NoteServiceService) {}
+  constructor(private noteService: NoteServiceService, private tagService: TagServiceService) {}
 
   get notes() { return this.noteService.allNotes; }
   @Input() isListView: boolean = false;
@@ -70,13 +71,22 @@ filteredNotes = computed(() => {
   }
 
   onNoteSaved(note: Note)    {
+    const allTags = this.tagService.allTags();
 
-  this.noteService.updateNote(note).subscribe({
-    next: () => console.log('Note updated'),
-    error: (err) => console.error('Failed to update note', err)
-  });
-  this.selectedNote = null;
-}
+    // Convert tag name strings back to Tag objects for the backend
+    const hydratedTags = (note.tags ?? [])
+      .map(tagName => allTags.find(t => t.name === tagName))
+      .filter(t => t !== undefined);
+
+    const payload = { ...note, tags: hydratedTags };
+
+    this.noteService.updateNote(payload as any).subscribe({
+      next: () => console.log('Note updated'),
+      error: (err) => console.error('Failed to update note', err)
+    });
+    this.selectedNote = null;
+  }
+
   onNoteDeleted(note: Note)   {
   this.noteService.deleteNote(note).subscribe({
     next: () => {
@@ -119,7 +129,7 @@ saveNewNote() {
     this.saveNewNote();
   }
 
-  trackByNoteId(index: number, note: Note): string {
+  trackByNoteId(index: number, note: Note): number {
   return note.id;
   }
 

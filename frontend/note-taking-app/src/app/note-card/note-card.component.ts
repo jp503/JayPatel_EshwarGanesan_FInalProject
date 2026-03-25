@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Note } from '../note';
 import { TagServiceService } from '../tag-service.service';
 import { Tag } from '../tag';
+import { NoteServiceService } from '../note-service.service';
 
 @Component({
   selector: 'app-note-card',
@@ -21,7 +22,7 @@ export class NoteCardComponent {
   @Output() deleteNote = new EventEmitter<Note>();
   @Output() labelChange = new EventEmitter<Note>();
 
-  constructor(private tagService: TagServiceService, private elementRef: ElementRef) {}
+  constructor(private tagService: TagServiceService, private noteService: NoteServiceService, private elementRef: ElementRef) {}
 
   hovered = false;
 
@@ -34,27 +35,32 @@ export class NoteCardComponent {
 
   filteredLabels = computed(() => {
     const q = this.searchTextSignal().toLowerCase().trim();
-    const labels = this.availableLabels();
+    const labels = this.tagService.allTags();
     
     if (!q) return labels;
     return labels.filter(l => l.name.toLowerCase().includes(q));
   })
 
 hasLabel(label: Tag): boolean {
-  return this.note.tags?.includes(label.name) ?? false;
+    const liveNote = this.noteService.allNotes().find(n => n.id === this.note.id);
+    return liveNote?.tags?.includes(label.name) ?? false;
 }
 
 toggleLabel(e: Event, label: Tag) {
-  e.stopPropagation();
-  const tags = this.note.tags ? [...this.note.tags] : [];
-  const idx = tags.indexOf(label.name);
-  if (idx > -1) {
-    tags.splice(idx, 1);
-  } else {
-    tags.push(label.name);
-  }
-  const updated = { ...this.note, tags };
-  this.labelChange.emit(updated);
+ e.stopPropagation();
+    const alreadyHas = this.hasLabel(label);
+
+    if (alreadyHas) {
+      this.noteService.removeTagFromNote(this.note.id, label.id, label.name).subscribe({
+        next: (updated) => this.labelChange.emit(updated),
+        error: (err) => console.error('Failed to remove tag', err)
+      });
+    } else {
+      this.noteService.addTagToNote(this.note.id, label.id, label.name).subscribe({
+        next: (updated) => this.labelChange.emit(updated),
+        error: (err) => console.error('Failed to add tag', err)
+      });
+    }
 }
 
   closeLabelPicker() {

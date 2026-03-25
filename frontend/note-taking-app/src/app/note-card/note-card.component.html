@@ -38,7 +38,10 @@
   </div>
 
   <!-- Hover toolbar -->
-  <div class="gk-card-toolbar" [class.gk-card-toolbar--visible]="hovered">
+  <div
+    class="gk-card-toolbar"
+    [class.gk-card-toolbar--visible]="hovered || labelPickerOpen"
+  >
     <button
       class="btn gk-tool-btn"
       (click)="onArchive($event)"
@@ -94,7 +97,7 @@
             </span>
             <span class="gk-label-name">{{ label.name }}</span>
           </li>
-          <li *ngIf="filteredLabels.length === 0" class="gk-label-picker-empty">
+          <li *ngIf="filteredLabels().length === 0" class="gk-label-picker-empty">
             No matching labels
           </li>
         </ul>

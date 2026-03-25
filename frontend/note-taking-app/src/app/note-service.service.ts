@@ -37,10 +37,7 @@ export class NoteServiceService {
       }[]>(`${this.baseUrl}/api/notes`)
       .pipe(
         map(notes =>
-          notes.map(n => ({
-            ...n,
-            tags: n.tags ? n.tags.map(t => t.name) : []
-          } as unknown as Note))
+          notes.map(n => this.normalizeNote(n))
         )
       );
   }
@@ -68,14 +65,15 @@ export class NoteServiceService {
   updateNote(note: Note): Observable<Note> {
     return this.http.put<Note>(`${this.baseUrl}/api/notes/${note.id}`, note).pipe(
       map(updatedNote => {
-        const current = this.notes();
-        const idx = current.findIndex(n => n.id === updatedNote.id);
-        if (idx > -1) {
-          current[idx] = updatedNote;
-          this.notes.set([...current]);
-        }
-        return updatedNote;
-      })
+      const normalized = this.normalizeNote(updatedNote);
+      const current = this.notes();
+      const idx = current.findIndex(n => n.id === normalized.id);
+      if (idx > -1) {
+        current[idx] = normalized;
+        this.notes.set([...current]);
+      }
+      return normalized;
+    })
     );
   }
 
@@ -91,14 +89,73 @@ export class NoteServiceService {
   pinNote(note: Note): Observable<Note> {
     return this.http.patch<Note>(`${this.baseUrl}/api/notes/${note.id}/pin`, {}).pipe(
       map(updatedNote => {
-        const current = this.notes();
-        const idx = current.findIndex(n => n.id === updatedNote.id);
-        if (idx > -1) {
-          current[idx] = updatedNote;
-          this.notes.set([...current]);
-        }
-        return updatedNote;
-      })
+      const normalized = this.normalizeNote(updatedNote);
+      const current = this.notes();
+      const idx = current.findIndex(n => n.id === normalized.id);
+      if (idx > -1) {
+        current[idx] = normalized;
+        this.notes.set([...current]);
+      }
+      return normalized;
+    })
     );
   }
+
+  addTagToNote(noteId: number, tagId: number, tagName: string): Observable<Note> {
+    const snapshot = this.applyOptimisticTagUpdate(noteId, tagName, true);
+
+    return this.http.post<Note>(`${this.baseUrl}/api/notes/${noteId}/tags/${tagId}`, {}).pipe(
+      map(updatedNote => {
+      const normalized = this.normalizeNote(updatedNote);
+      const current = this.notes();
+      const idx = current.findIndex(n => n.id === normalized.id);
+      if (idx > -1) {
+        current[idx] = normalized;
+        this.notes.set([...current]);
+      }
+      return normalized;
+    })
+    );
+  }
+
+  removeTagFromNote(noteId: number, tagId: number, tagName: string): Observable<Note> {
+    const snapshot = this.applyOptimisticTagUpdate(noteId, tagName, false);
+
+    return this.http.delete<Note>(`${this.baseUrl}/api/notes/${noteId}/tags/${tagId}`).pipe(
+      map(updatedNote => {
+      const normalized = this.normalizeNote(updatedNote);
+      const current = this.notes();
+      const idx = current.findIndex(n => n.id === normalized.id);
+      if (idx > -1) {
+        current[idx] = normalized;
+        this.notes.set([...current]);
+      }
+      return normalized;
+    })
+    );
+  }
+
+  private normalizeNote(raw: any): Note {
+  return {
+    ...raw,
+    tags: raw.tags ? raw.tags.map((t: any) => t.name ?? t) : []
+  };
+}
+
+private applyOptimisticTagUpdate(noteId: number, tagName: string, add: boolean): Note[] {
+  const current = this.notes();
+  const idx = current.findIndex(n => n.id === noteId);
+  if (idx === -1) return current;
+
+  const note = current[idx];
+  const tags = note.tags ? [...note.tags] : [];
+  const updated = add
+    ? [...tags, tagName]
+    : tags.filter(t => t !== tagName);
+
+  const updatedNotes = [...current];
+  updatedNotes[idx] = { ...note, tags: updated };
+  this.notes.set(updatedNotes);
+  return current; // return snapshot for rollback
+}
 }
