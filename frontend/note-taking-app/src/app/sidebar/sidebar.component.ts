@@ -12,7 +12,6 @@ import { Tag } from '../tag';
   styleUrls: ['./sidebar.component.css']
 })
 export class SidebarComponent{
-  @Input() labels: Tag[] = [];
   editingLabels = false;
   newLabelText = '';
   editingIndex: number | null = null;
@@ -20,12 +19,10 @@ export class SidebarComponent{
 
   constructor(private tagService: TagServiceService) {}
 
-  ngOnInit(): void {
-    this.tagService.getAllTags().subscribe({
-      next: (t) => this.labels = t,
-      error: (err) => console.error('Failed to load tags', err)
-    });
+  get labels(): Tag[] {
+    return this.tagService.allTags;
   }
+  
 
   toggleEditing() {
     this.editingLabels = !this.editingLabels;

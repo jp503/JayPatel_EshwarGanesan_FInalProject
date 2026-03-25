@@ -16,14 +16,16 @@ export class TagServiceService {
   private baseUrl = 'http://localhost:8080';
 
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) { 
+    this.loadTags();
+  }
 
   getAllTags(): Observable<Tag[]> {
   return this.http.get<Tag[]>(`${this.baseUrl}/api/tags`);
 }
   loadTags(): void {
     this.getAllTags().subscribe({
-      next: (t) => this.tags = t,
+      next: (t) => this.tags.splice(0, this.tags.length, ...t),
       error: (err) => console.error('Failed to load tags', err)
     });
   } 
@@ -58,7 +60,8 @@ export class TagServiceService {
   deleteTag(id: number): Observable<void> {
   return this.http.delete<void>(`${this.baseUrl}/api/tags/${id}`).pipe(
     map(() => {
-      this.tags = this.tags.filter(t => t.id !== id);
+      const idx = this.tags.findIndex(t => t.id === id);
+      if (idx !== -1) this.tags.splice(idx, 1);
     })
   );
 }

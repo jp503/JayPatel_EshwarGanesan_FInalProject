@@ -53,12 +53,52 @@
     >
       <i class="bi bi-trash"></i>
     </button>
-    <button
-      class="btn gk-tool-btn"
-      (click)="onMore($event)"
-      aria-label="More options"
-    >
-      <i class="bi bi-three-dots-vertical"></i>
-    </button>
+
+    <!-- Label button + picker -->
+    <div class="gk-label-picker-anchor" (click)="$event.stopPropagation()">
+      <button
+        class="btn gk-tool-btn"
+        [class.gk-tool-btn--active]="labelPickerOpen"
+        (click)="onAddLabel($event)"
+        aria-label="Add label"
+      >
+        <i class="bi bi-tag"></i>
+      </button>
+
+      <!-- Dropdown -->
+      <div class="gk-label-picker" *ngIf="labelPickerOpen">
+        <div class="gk-label-picker-header">Label note</div>
+        <div class="gk-label-search-wrapper">
+          <input
+            class="gk-label-search"
+            type="text"
+            placeholder="Search labels"
+            [(ngModel)]="labelSearch"
+            (click)="$event.stopPropagation()"
+            aria-label="Search labels"
+          />
+        </div>
+        <ul class="gk-label-picker-list">
+          <li
+            *ngFor="let label of filteredLabels"
+            class="gk-label-picker-item"
+            [class.gk-label-picker-item--checked]="hasLabel(label)"
+            (click)="toggleLabel($event, label)"
+          >
+            <span class="gk-label-checkbox">
+              <i
+                class="bi"
+                [class.bi-check-square-fill]="hasLabel(label)"
+                [class.bi-square]="!hasLabel(label)"
+              ></i>
+            </span>
+            <span class="gk-label-name">{{ label.name }}</span>
+          </li>
+          <li *ngIf="filteredLabels.length === 0" class="gk-label-picker-empty">
+            No matching labels
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 </div>
