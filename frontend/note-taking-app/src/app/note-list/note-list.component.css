@@ -305,6 +305,143 @@
   transition: opacity 0.15s ease;
 }
 
+/* _____________________________________
+   PASSWORD PROMPT
+_____________________________________ */
+.gk-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gk-password-modal {
+  background: #fff;
+  border-radius: 12px;
+  width: 360px;
+  padding: 28px 28px 20px 28px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.gk-password-modal-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.gk-password-modal-header i {
+  font-size: 2rem;
+  color: #5f6368;
+}
+
+.gk-password-modal-header h3 {
+  font-family: 'Lato', Roboto, sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #202124;
+  margin: 0;
+}
+
+.gk-password-modal-header p {
+  font-family: 'Lato', Roboto, sans-serif;
+  font-size: 0.875rem;
+  color: #5f6368;
+  margin: 0;
+}
+
+.gk-password-modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gk-password-input {
+  width: 100%;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-family: 'Lato', Roboto, sans-serif;
+  font-size: 0.9375rem;
+  color: #202124;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease;
+}
+
+.gk-password-input:focus {
+  border-color: #1a73e8;
+}
+
+.gk-password-error {
+  font-family: 'Lato', Roboto, sans-serif;
+  font-size: 0.8125rem;
+  color: #d93025;
+  margin: 0;
+}
+
+.gk-password-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.gk-btn-cancel,
+.gk-btn-unlock {
+  height: 36px;
+  padding: 0 18px;
+  border-radius: 8px;
+  border: none;
+  font-family: 'Lato', Roboto, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.15s ease;
+}
+
+.gk-btn-cancel {
+  background: #f1f3f4;
+  color: #5f6368;
+}
+
+.gk-btn-cancel:hover {
+  background: #e0e0e0;
+}
+
+.gk-btn-unlock {
+  background: #1a73e8;
+  color: #fff;
+}
+
+.gk-btn-unlock:hover:not(:disabled) {
+  background: #1765cc;
+}
+
+.gk-btn-unlock:disabled,
+.gk-btn-cancel:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.gk-spin {
+  animation: spin 0.8s linear infinite;
+}
+
 /* ───────────────────────────────────────
    ANIMATIONS
 ─────────────────────────────────────── */

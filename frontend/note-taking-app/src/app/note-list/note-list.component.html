@@ -93,6 +93,45 @@
     <p class="gk-empty-text">Notes you add appear here</p>
   </div>
 </div>
+
+<!-- Password Prompt Modal -->
+<div class="gk-modal-backdrop" *ngIf="passwordPromptNote" (click)="onPasswordCancel()">
+  <div class="gk-password-modal" (click)="$event.stopPropagation()">
+
+    <div class="gk-password-modal-header">
+      <i class="bi bi-lock"></i>
+      <h3>Protected Note</h3>
+      <p>Enter the password to view <strong>{{ passwordPromptNote.title || 'this note' }}</strong></p>
+    </div>
+
+    <div class="gk-password-modal-body">
+      <input
+        class="gk-password-input"
+        type="password"
+        placeholder="Password"
+        [(ngModel)]="passwordInput"
+        (keydown.enter)="onPasswordSubmit()"
+        [disabled]="passwordLoading"
+        autofocus
+        aria-label="Note password"
+      />
+      <p class="gk-password-error" *ngIf="passwordError">{{ passwordError }}</p>
+    </div>
+
+    <div class="gk-password-modal-actions">
+      <button class="gk-btn-cancel" (click)="onPasswordCancel()" [disabled]="passwordLoading">
+        Cancel
+      </button>
+      <button class="gk-btn-unlock" (click)="onPasswordSubmit()" [disabled]="passwordLoading || !passwordInput">
+        <i class="bi bi-unlock" *ngIf="!passwordLoading"></i>
+        <i class="bi bi-arrow-repeat gk-spin" *ngIf="passwordLoading"></i>
+        {{ passwordLoading ? 'Unlocking...' : 'Unlock' }}
+      </button>
+    </div>
+
+  </div>
+</div>
+
 <app-note-editor
   *ngIf="selectedNote"
   [note]="selectedNote"

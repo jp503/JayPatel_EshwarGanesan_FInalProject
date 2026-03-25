@@ -34,6 +34,11 @@ export class NoteListComponent {
   creatorExpanded = false;
   selectedNote: Note | null = null;
 
+  passwordPromptNote: Note | null = null;
+  passwordInput = '';
+  passwordError = '';
+  passwordLoading = false;
+
   private searchTextSignal = signal('');
 
 @Input() set searchText(value: string) {
@@ -54,7 +59,40 @@ filteredNotes = computed(() => {
   get pinnedNotes() { return this.notes().filter(n => n.pinned); }
   get otherNotes()  { return this.notes().filter(n => !n.pinned); }
 
-  onCardClick(note: Note) { this.selectedNote = {...note}; }
+  onCardClick(note: Note) { 
+    if (note.passwordProtected) {
+      this.passwordPromptNote = note;
+      this.passwordInput = '';
+      this.passwordError = '';
+    } else {
+      this.selectedNote = { ...note };
+    }
+  }
+
+  onPasswordSubmit() {
+    if (!this.passwordPromptNote) return;
+    this.passwordLoading = true;
+    this.passwordError = '';
+
+    this.noteService.unlockNote(this.passwordPromptNote.id, this.passwordInput).subscribe({
+      next: (unlockedNote) => {
+        this.passwordLoading = false;
+        this.selectedNote = { ...unlockedNote };
+        this.passwordPromptNote = null;
+        this.passwordInput = '';
+      },
+      error: () => {
+        this.passwordLoading = false;
+        this.passwordError = 'Incorrect password. Please try again.';
+      }
+    });
+  }
+
+  onPasswordCancel() {
+    this.passwordPromptNote = null;
+    this.passwordInput = '';
+    this.passwordError = '';
+  }
 
   onEditorClose() { 
     setTimeout(() => {

@@ -158,4 +158,13 @@ private applyOptimisticTagUpdate(noteId: number, tagName: string, add: boolean):
   this.notes.set(updatedNotes);
   return current; // return snapshot for rollback
 }
+
+unlockNote(noteId: number, password: string): Observable<Note> {
+  return this.http.post<any>(
+    `${this.baseUrl}/api/notes/${noteId}/unlock`,
+    { password }
+  ).pipe(
+    map(note => this.normalizeNote(note))
+  );
+}
 }
