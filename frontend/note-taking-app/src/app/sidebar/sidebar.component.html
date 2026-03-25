@@ -69,7 +69,7 @@
               *ngIf="editingIndex !== i"
               class="gk-label-edit-text"
               (click)="startEditing(i)"
-            >{{ label }}</span>
+            >{{ label.name }}</span>
 
             <button
               class="gk-label-icon-btn"
@@ -87,7 +87,7 @@
             class="gk-nav-item"
           >
             <i class="bi bi-tag gk-nav-icon"></i>
-            <span>{{ label }}</span>
+            <span>{{ label.name }}</span>
           </a>
         </li>
 

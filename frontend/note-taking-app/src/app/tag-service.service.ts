@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { Tag } from './tag';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TagServiceService {
 
-  private tags: string[] = [];
+  private tags: Tag[] = [];
 
   public readonly allTags = this.tags;
 
@@ -17,17 +18,49 @@ export class TagServiceService {
 
   constructor(private http: HttpClient) { }
 
-  getAllTags(): Observable<string[]> {
-    return this.http
-      .get<{ id: number; name: string; notes: any[] }[]>(`${this.baseUrl}/api/tags`)
-      .pipe(map(tags => tags.map(t => t.name)));
-  }
-
+  getAllTags(): Observable<Tag[]> {
+  return this.http.get<Tag[]>(`${this.baseUrl}/api/tags`);
+}
   loadTags(): void {
     this.getAllTags().subscribe({
       next: (t) => this.tags = t,
       error: (err) => console.error('Failed to load tags', err)
     });
   } 
+
+  createTag(name: string): Observable<Tag> {
+    return this.http
+    .post<Tag>(`${this.baseUrl}/api/tags`, { name })
+    .pipe(
+      map(createdTag => {
+        this.tags.push(createdTag);
+        return createdTag;
+      })
+    );
+  }
+
+  updateTag(id: number, newName: string): Observable<Tag> {
+  return this.http
+    .put<Tag>(`${this.baseUrl}/api/tags/${id}`, { name: newName })
+    .pipe(
+      map(updatedTag => {
+        const index = this.tags.findIndex(t => t.id === id);
+
+        if (index !== -1) {
+          this.tags[index] = updatedTag;
+        }
+
+        return updatedTag;
+      })
+    );
+}
+
+  deleteTag(id: number): Observable<void> {
+  return this.http.delete<void>(`${this.baseUrl}/api/tags/${id}`).pipe(
+    map(() => {
+      this.tags = this.tags.filter(t => t.id !== id);
+    })
+  );
+}
   
 }
