@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TagServiceService } from '../tag-service.service';
@@ -19,9 +19,7 @@ export class SidebarComponent{
 
   constructor(private tagService: TagServiceService) {}
 
-  get labels(): Tag[] {
-    return this.tagService.allTags;
-  }
+  get labels() { return this.tagService.allTags }
   
 
   toggleEditing() {
@@ -36,11 +34,10 @@ export class SidebarComponent{
    if (!trimmed) return;
 
   // check by name
-  if (this.labels.some(t => t.name === trimmed)) return;
+  if (this.labels().some(t => t.name === trimmed)) return;
 
   this.tagService.createTag(trimmed).subscribe({
-    next: (createdTag) => {
-      this.labels.push(createdTag); 
+    next: () => {
       console.log('Tag created');
     },
     error: (err) => console.error('Failed to create tag', err)
@@ -56,20 +53,19 @@ export class SidebarComponent{
 
   startEditing(index: number) {
     this.editingIndex = index;
-    this.editingText = this.labels[index].name;
+    this.editingText = this.labels()[index].name;
   }
 
   saveEdit(index: number) {
     const trimmed = this.editingText.trim();
-    const tag = this.labels[index];
+    const tag = this.labels()[index];
 
     if (!trimmed) return;
 
-    if (this.labels.some(t => t.name === trimmed)) return;
+    if (this.labels().some(t => t.name === trimmed)) return;
 
     this.tagService.updateTag(tag.id, trimmed).subscribe({
-      next: (updatedTag) => {
-        this.labels[index] = updatedTag; 
+      next: () => {
         console.log('Tag updated');
       },
       error: (err) => console.error('Failed to update tag', err)
@@ -84,11 +80,10 @@ export class SidebarComponent{
   }
 
   deleteLabel(index: number) {
-    const tag = this.labels[index];
+    const tag = this.labels()[index];
 
     this.tagService.deleteTag(tag.id).subscribe({
       next: () => {
-        this.labels.splice(index, 1); 
         console.log('Tag deleted');
       },
       error: (err) => console.error('Failed to delete tag', err)

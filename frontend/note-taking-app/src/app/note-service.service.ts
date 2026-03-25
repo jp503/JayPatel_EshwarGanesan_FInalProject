@@ -11,10 +11,12 @@ export class NoteServiceService {
 
   private notes = signal<Note[]>([]);
 
-  public readonly allNotes = this.notes.asReadonly();
+  public readonly allNotes = this.notes;
   private baseUrl = 'http://localhost:8080'; // adjust port/path as needed
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    this.loadNotes();
+   }
 
   /**
    * Return observable of notes from backend API.

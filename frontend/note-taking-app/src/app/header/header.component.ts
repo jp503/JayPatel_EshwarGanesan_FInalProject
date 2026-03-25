@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { NoteServiceService } from '../note-service.service';
 
 @Component({
   selector: 'app-header',
@@ -10,6 +11,8 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
+  constructor(private NoteServiceService: NoteServiceService) {}
+  @Output() toggleView = new EventEmitter<void>();
   @Output() searchChange = new EventEmitter<string>();
 
   onSearchChange() {

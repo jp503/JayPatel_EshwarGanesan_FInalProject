@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, HostListener } from '@angular/core';
+import { Component, Input, Output, EventEmitter, HostListener, ElementRef, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Note } from '../note';
@@ -21,23 +21,24 @@ export class NoteCardComponent {
   @Output() deleteNote = new EventEmitter<Note>();
   @Output() labelChange = new EventEmitter<Note>();
 
-  constructor(private tagService: TagServiceService) {}
+  constructor(private tagService: TagServiceService, private elementRef: ElementRef) {}
 
   hovered = false;
 
   labelPickerOpen = false;
-  labelSearch = '';
+  searchTextSignal = signal('');
 
-  get availableLabels(): Tag[] {
+  get availableLabels() {
     return this.tagService.allTags;
   }
 
-  get filteredLabels(): Tag[] {
-  const q = this.labelSearch.toLowerCase();
-  return q
-    ? this.availableLabels.filter(l => l.name.toLowerCase().includes(q))
-    : this.availableLabels;
-}
+  filteredLabels = computed(() => {
+    const q = this.searchTextSignal().toLowerCase().trim();
+    const labels = this.availableLabels();
+    
+    if (!q) return labels;
+    return labels.filter(l => l.name.toLowerCase().includes(q));
+  })
 
 hasLabel(label: Tag): boolean {
   return this.note.tags?.includes(label.name) ?? false;
@@ -58,7 +59,7 @@ toggleLabel(e: Event, label: Tag) {
 
   closeLabelPicker() {
     this.labelPickerOpen = false;
-    this.labelSearch = '';
+    this.searchTextSignal.set('');
   }
 
   onCardClick()          { this.cardClick.emit(this.note); }
@@ -71,11 +72,13 @@ toggleLabel(e: Event, label: Tag) {
   onAddLabel(e: Event) {
   e.stopPropagation();
   this.labelPickerOpen = !this.labelPickerOpen;
-  this.labelSearch = '';
+  this.searchTextSignal.set('');
 }
 
-@HostListener('document:click')
-onDocumentClick() {
-  if (this.labelPickerOpen) this.closeLabelPicker();
-}
+@HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event) {
+    if (this.labelPickerOpen && !this.elementRef.nativeElement.contains(event.target)) {
+      this.closeLabelPicker();
+    }
+  }
 }

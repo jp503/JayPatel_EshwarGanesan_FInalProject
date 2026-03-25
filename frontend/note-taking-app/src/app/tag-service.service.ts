@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -9,7 +9,7 @@ import { Tag } from './tag';
 })
 export class TagServiceService {
 
-  private tags: Tag[] = [];
+  private tags = signal<Tag[]>([]);
 
   public readonly allTags = this.tags;
 
@@ -21,11 +21,13 @@ export class TagServiceService {
   }
 
   getAllTags(): Observable<Tag[]> {
-  return this.http.get<Tag[]>(`${this.baseUrl}/api/tags`);
+  return this.http.get<Tag[]>(`${this.baseUrl}/api/tags`).pipe(
+    map(tags => tags.map(t => ({ id: t.id, name: t.name , notes: t.notes || [] })))
+  );
 }
   loadTags(): void {
     this.getAllTags().subscribe({
-      next: (t) => this.tags.splice(0, this.tags.length, ...t),
+      next: (t) => this.tags.set(t),
       error: (err) => console.error('Failed to load tags', err)
     });
   } 
@@ -35,7 +37,8 @@ export class TagServiceService {
     .post<Tag>(`${this.baseUrl}/api/tags`, { name })
     .pipe(
       map(createdTag => {
-        this.tags.push(createdTag);
+        const current = this.tags();
+        this.tags.set([createdTag, ...current]);
         return createdTag;
       })
     );
@@ -46,10 +49,12 @@ export class TagServiceService {
     .put<Tag>(`${this.baseUrl}/api/tags/${id}`, { name: newName })
     .pipe(
       map(updatedTag => {
-        const index = this.tags.findIndex(t => t.id === id);
+        const current = this.tags();
+        const index = current.findIndex(t => t.id === id);
 
-        if (index !== -1) {
-          this.tags[index] = updatedTag;
+        if (index > -1) {
+          current[index] = updatedTag;
+          this.tags.set([...current]);
         }
 
         return updatedTag;
@@ -60,8 +65,8 @@ export class TagServiceService {
   deleteTag(id: number): Observable<void> {
   return this.http.delete<void>(`${this.baseUrl}/api/tags/${id}`).pipe(
     map(() => {
-      const idx = this.tags.findIndex(t => t.id === id);
-      if (idx !== -1) this.tags.splice(idx, 1);
+      const current = this.tags();
+      this.tags.set(current.filter(t => t.id !== id));
     })
   );
 }

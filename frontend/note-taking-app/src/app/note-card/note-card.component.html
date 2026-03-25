@@ -73,14 +73,14 @@
             class="gk-label-search"
             type="text"
             placeholder="Search labels"
-            [(ngModel)]="labelSearch"
+            [(ngModel)]="searchTextSignal"
             (click)="$event.stopPropagation()"
             aria-label="Search labels"
           />
         </div>
         <ul class="gk-label-picker-list">
           <li
-            *ngFor="let label of filteredLabels"
+            *ngFor="let label of filteredLabels()"
             class="gk-label-picker-item"
             [class.gk-label-picker-item--checked]="hasLabel(label)"
             (click)="toggleLabel($event, label)"

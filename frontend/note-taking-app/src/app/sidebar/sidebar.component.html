@@ -43,7 +43,7 @@
 
     <nav aria-label="Labels">
       <ul class="gk-nav-list">
-        <li *ngFor="let label of labels; let i = index">
+        <li *ngFor="let label of labels(); let i = index">
 
           <!-- Edit mode row -->
           <div *ngIf="editingLabels" class="gk-label-edit-row">
