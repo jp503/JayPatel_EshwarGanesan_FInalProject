@@ -10,14 +10,20 @@ import { Tag } from './tag';
 export class TagServiceService {
 
   private tags = signal<Tag[]>([]);
-
   public readonly allTags = this.tags;
+
+  private selectedTag = signal<Tag | null>(null);
+  public readonly currentTag = this.selectedTag;
 
   private baseUrl = 'http://localhost:8080';
 
 
   constructor(private http: HttpClient) { 
     this.loadTags();
+  }
+
+  setSelectedTag(tag: Tag | null) {
+    this.selectedTag.set(tag);
   }
 
   getAllTags(): Observable<Tag[]> {

@@ -50,12 +50,13 @@ export class NoteListComponent {
 filteredNotes = computed(() => {
   const q = this.searchTextSignal().toLowerCase().trim();
   const notes = this.noteService.allNotes();
+  const selectedTag = this.tagService.currentTag();
 
-  if (!q) return notes;
-
-  return notes.filter(n =>
-    JSON.stringify(n).toLowerCase().includes(q)
-  );
+  return notes.filter(n => {
+    const matchesSearch = JSON.stringify(n).toLowerCase().includes(q);
+    const matchesTag = !selectedTag || n.tags?.includes(selectedTag.name);
+    return matchesSearch && matchesTag;
+  });
 });
 
 pinnedNotes = computed(() =>

@@ -14,15 +14,15 @@
     <nav aria-label="Main navigation">
       <ul class="gk-nav-list">
         <li>
-          <a href="#" class="gk-nav-item active" aria-current="page">
+          <a
+            href="#"
+            class="gk-nav-item"
+            [class.active]="!selectedTag"
+            (click)="selectLabel(null)"
+            aria-current="page"
+          >
             <i class="bi bi-lightbulb gk-nav-icon"></i>
             <span>Notes</span>
-          </a>
-        </li>
-        <li>
-          <a href="#" class="gk-nav-item">
-            <i class="bi bi-bell gk-nav-icon"></i>
-            <span>Reminders</span>
           </a>
         </li>
       </ul>
@@ -44,7 +44,6 @@
     <nav aria-label="Labels">
       <ul class="gk-nav-list">
         <li *ngFor="let label of labels(); let i = index">
-
           <!-- Edit mode row -->
           <div *ngIf="editingLabels" class="gk-label-edit-row">
             <button
@@ -69,15 +68,8 @@
               *ngIf="editingIndex !== i"
               class="gk-label-edit-text"
               (click)="startEditing(i)"
-            >{{ label.name }}</span>
-
-            <button
-              class="gk-label-icon-btn"
-              (click)="startEditing(i)"
-              aria-label="Edit label"
+              >{{ label.name }}</span
             >
-              <i class="bi bi-pencil"></i>
-            </button>
           </div>
 
           <!-- Normal nav item -->
@@ -85,6 +77,8 @@
             *ngIf="!editingLabels"
             href="#"
             class="gk-nav-item"
+            (click)="selectLabel(label)"
+            [class.active]="selectedTag?.id === label.id"
           >
             <i class="bi bi-tag gk-nav-icon"></i>
             <span>{{ label.name }}</span>

@@ -16,6 +16,7 @@ export class SidebarComponent{
   newLabelText = '';
   editingIndex: number | null = null;
   editingText = '';
+  get selectedTag() { return this.tagService.currentTag(); }
 
   constructor(private tagService: TagServiceService) {}
 
@@ -26,6 +27,11 @@ export class SidebarComponent{
     this.editingLabels = !this.editingLabels;
     this.newLabelText = '';
     this.editingIndex = null;
+  }
+
+  selectLabel(tag: Tag | null) {
+    this.tagService.setSelectedTag(tag);
+    console.log('Selected tag:', tag);
   }
 
   addLabel() {
@@ -52,8 +58,10 @@ export class SidebarComponent{
   }
 
   startEditing(index: number) {
+    if (!this.editingIndex) {
     this.editingIndex = index;
     this.editingText = this.labels()[index].name;
+    }
   }
 
   saveEdit(index: number) {
